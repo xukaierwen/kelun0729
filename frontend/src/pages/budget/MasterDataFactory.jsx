@@ -85,7 +85,7 @@ export function createMasterDataPage(pageKey, defSource = 'master') {
         onRefresh={handleRefresh}
         loading={loading}
         allowSearch={true}
-        allowImportExport={true}
+        allowImportExport={false}
         rowKey="id"
       />
     )
