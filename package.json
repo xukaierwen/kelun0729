@@ -1,0 +1,12 @@
+{
+  "name": "smart-budget-platform",
+  "version": "1.0.0",
+  "description": "智能预算平台 - 医药企业预算管理系统",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "dev": "cd frontend && npm run dev"
+  },
+  "keywords": ["react", "express", "budget-management"],
+  "author": "",
+  "license": "MIT"
+}
