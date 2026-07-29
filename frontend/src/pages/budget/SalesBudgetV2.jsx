@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Card, Button, Space, Table, Select, InputNumber, message, Modal, Tag, Row, Col, Statistic, Alert } from 'antd'
+import { Card, Button, Space, Table, Select, InputNumber, message, Modal, Tag, Row, Col, Statistic } from 'antd'
 import {
   PlusOutlined, DeleteOutlined, SaveOutlined, DownloadOutlined,
 } from '@ant-design/icons'
-import api, { checkBackendAvailable } from '../../api'
+import api from '../../api'
 
 const MONTH_KEYS = Array.from({ length: 12 }, (_, i) => `month_${String(i + 1).padStart(2, '0')}`)
 const MONTH_LABELS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
@@ -38,22 +38,12 @@ export default function SalesBudgetV2() {
   const [entity, setEntity] = useState(null)
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(false)
-  const [backendDown, setBackendDown] = useState(false)
 
-  // 加载数据
+  // 加载数据 - 2秒超时，失败不阻塞
   const loadData = async () => {
     if (!entity) return
     setLoading(true)
     try {
-      // 快速检查后端是否可用
-      const available = await checkBackendAvailable()
-      if (!available) {
-        setBackendDown(true)
-        setRows([createRow(year, entity)])
-        return
-      }
-      
-      setBackendDown(false)
       const res = await api.get('/budget/sales', { params: { year, entity } })
       const data = res.data || []
       if (data.length > 0) {
@@ -66,7 +56,7 @@ export default function SalesBudgetV2() {
         setRows([createRow(year, entity)])
       }
     } catch (err) {
-      // 如果API失败，使用空行
+      // 静默失败，使用空行
       setRows([createRow(year, entity)])
     } finally {
       setLoading(false)
@@ -221,17 +211,6 @@ export default function SalesBudgetV2() {
   return (
     <div>
       {contextHolder}
-
-      {backendDown && (
-        <Alert
-          message="后端服务不可用"
-          description="当前为静态部署模式，后端 API 服务未连接。页面可正常浏览，但数据保存功能暂时不可用。"
-          type="warning"
-          showIcon
-          style={{ marginBottom: 16 }}
-          closable
-        />
-      )}
 
       <Card
         title="销售预算编制"
