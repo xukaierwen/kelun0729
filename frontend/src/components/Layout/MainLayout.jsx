@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Avatar, Dropdown, Badge } from 'antd';
+import { Layout, Menu, Input, Tag, Tabs } from 'antd';
 import {
   DashboardOutlined,
   DatabaseOutlined,
@@ -8,20 +8,30 @@ import {
   BarChartOutlined,
   SettingOutlined,
   UserOutlined,
-  BellOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
+  SearchOutlined,
+  CloseOutlined,
+  PlusOutlined,
   AppstoreOutlined,
   DollarOutlined,
   BgColorsOutlined,
   ApiOutlined,
+  CodeOutlined,
+  BankOutlined,
+  FileSearchOutlined,
+  TeamOutlined,
+  ExperimentOutlined,
+  CheckSquareOutlined,
+  DollarCircleOutlined,
+  EnvironmentOutlined,
+  CloudServerOutlined,
+  MessageOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import './MainLayout.css';
 
 const { Header, Sider, Content } = Layout;
 
-// 四级菜单配置
+// 菜单配置 - 带图标
 const menuItems = [
   {
     key: '/dashboard',
@@ -45,9 +55,9 @@ const menuItems = [
           { key: '/dimension/master/currency', label: '币种' },
           { key: '/dimension/master/product', label: '产品主数据' },
           { key: '/dimension/master/province', label: '省份' },
-          { key: '/dimension/master/sales-officer-hq', label: '一级业务员(总部)' },
+          { key: '/dimension/master/sales-officer-hq', label: '一级业务员 (总部)' },
           { key: '/dimension/master/sales-office', label: '销售办公室' },
-          { key: '/dimension/master/sales-group', label: '销售组(片区业务员1)' },
+          { key: '/dimension/master/sales-group', label: '销售组 (片区业务员 1)' },
           { key: '/dimension/master/region-dimension', label: '片区管理维度' },
           { key: '/dimension/master/customer', label: '客户主数据' },
           { key: '/dimension/master/entity', label: '实体' },
@@ -68,9 +78,9 @@ const menuItems = [
           { key: '/dimension/mapping/business-mode-config', label: '业务模式配置表' },
           { key: '/dimension/mapping/product-owner-config', label: '产品负责人配置表' },
           { key: '/dimension/mapping/product-arch', label: '产品架构表' },
-          { key: '/dimension/mapping/product-arch-mapping', label: '产品-架构映射表' },
-          { key: '/dimension/mapping/office-group', label: '销售办公室-销售组映射表' },
-          { key: '/dimension/mapping/region-salesman', label: '片区业务员(片区业务员2)' },
+          { key: '/dimension/mapping/product-arch-mapping', label: '产品 - 架构映射表' },
+          { key: '/dimension/mapping/office-group', label: '销售办公室 - 销售组映射表' },
+          { key: '/dimension/mapping/region-salesman', label: '片区业务员 (片区业务员 2)' },
           { key: '/dimension/mapping/pure-sales', label: '纯销数据' },
           { key: '/dimension/mapping/commodity-class', label: '商品名分类配置表' },
           { key: '/dimension/mapping/product-tag', label: '片区产品标识配置表' },
@@ -118,7 +128,7 @@ const menuItems = [
       { key: '/budget/actual-before', icon: <LineChartOutlined />, label: '实际数调整前' },
       { key: '/budget/planned-complete', icon: <LineChartOutlined />, label: '预计完成数' },
       { key: '/budget/annual', icon: <BarChartOutlined />, label: '年度预算' },
-      { key: '/budget/adjust-plan', icon: <FileTextOutlined />, label: '预算调整6+6' },
+      { key: '/budget/adjust-plan', icon: <FileTextOutlined />, label: '预算调整 6+6' },
       { key: '/budget/rolling-forecast', icon: <LineChartOutlined />, label: '滚动预测' },
       { key: '/budget/analysis', icon: <BarChartOutlined />, label: '预实分析' },
       { key: '/budget/calc-program', icon: <SettingOutlined />, label: '计算程序' },
@@ -127,7 +137,7 @@ const menuItems = [
   {
     key: '/ml-management',
     icon: <BgColorsOutlined />,
-    label: 'AI模型管理',
+    label: 'AI 模型管理',
   },
   {
     key: 'system',
@@ -155,58 +165,172 @@ const menuItems = [
   },
 ];
 
+// 页面标题映射
+const pageTitleMap = {
+  '/dashboard': '首页概览',
+  '/dimension/master/type': '总部管理类型',
+  '/dimension/master/team': '总部管理团队',
+  '/dimension/master/business-mode': '业务模式',
+  '/dimension/master/sales-mode': '销售模式',
+  '/dimension/master/currency': '币种',
+  '/dimension/master/product': '产品主数据',
+  '/dimension/master/province': '省份',
+  '/dimension/master/sales-officer-hq': '一级业务员 (总部)',
+  '/dimension/master/sales-office': '销售办公室',
+  '/dimension/master/sales-group': '销售组 (片区业务员 1)',
+  '/dimension/master/region-dimension': '片区管理维度',
+  '/dimension/master/customer': '客户主数据',
+  '/dimension/master/entity': '实体',
+  '/dimension/master/department': '部门',
+  '/dimension/master/scenario': '场景',
+  '/dimension/master/version': '版本',
+  '/dimension/master/period': '期间',
+  '/dimension/master/year': '年份',
+  '/dimension/master/account': '科目',
+  '/dimension/master/project': '项目主数据',
+  '/dimension/mapping/business-mode-config': '业务模式配置表',
+  '/dimension/mapping/product-owner-config': '产品负责人配置表',
+  '/dimension/mapping/product-arch': '产品架构表',
+  '/dimension/mapping/product-arch-mapping': '产品 - 架构映射表',
+  '/dimension/mapping/office-group': '销售办公室 - 销售组映射表',
+  '/dimension/mapping/region-salesman': '片区业务员 (片区业务员 2)',
+  '/dimension/mapping/pure-sales': '纯销数据',
+  '/dimension/mapping/commodity-class': '商品名分类配置表',
+  '/dimension/mapping/product-tag': '片区产品标识配置表',
+  '/dimension/mapping/dept-belong': '归属部门配置表',
+  '/dimension/mapping/hq-salesman': '一级业务员配置表',
+  '/dimension/mapping/salesman-entity': '业务员预算实体配置表',
+  '/dimension/mapping/customer-sap': '客户主数据映射表',
+  '/dimension/mapping/virtual-product': '虚拟产品映射表',
+  '/budget/actual-sales-digital': '数字营销',
+  '/budget/actual-sales-summary': '销售实际数汇总查看',
+  '/budget/actual-before': '实际数调整前',
+  '/budget/planned-complete': '预计完成数',
+  '/budget/annual': '年度预算',
+  '/budget/adjust-plan': '预算调整 6+6',
+  '/budget/rolling-forecast': '滚动预测',
+  '/budget/analysis': '预实分析',
+  '/budget/calc-program': '计算程序',
+  '/ml-management': 'AI 模型管理',
+  '/system/params': '系统参数',
+  '/system/workflow': '审批流程',
+  '/system/dictionary': '字典管理',
+  '/auth/roles': '角色管理',
+  '/auth/permissions': '权限分配',
+  '/logs/audit': '日志审计',
+};
+
 function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [openTabs, setOpenTabs] = useState([{ key: '/dashboard', title: '首页概览' }]);
+  const [activeTab, setActiveTab] = useState('/dashboard');
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 用户菜单
-  const userMenuItems = [
-    { key: 'profile', label: '个人信息' },
-    { key: 'logout', label: '退出登录' },
-  ];
+  // 菜单点击 - 打开标签页
+  const handleMenuClick = ({ key }) => {
+    if (key.startsWith('/')) {
+      const title = pageTitleMap[key] || key;
+      // 如果标签页已存在，直接切换
+      if (openTabs.find(tab => tab.key === key)) {
+        setActiveTab(key);
+        navigate(key);
+      } else {
+        // 添加新标签页
+        setOpenTabs([...openTabs, { key, title }]);
+        setActiveTab(key);
+        navigate(key);
+      }
+    }
+  };
+
+  // 关闭标签页
+  const handleCloseTab = (key, e) => {
+    e.stopPropagation();
+    const newTabs = openTabs.filter(tab => tab.key !== key);
+    if (newTabs.length === 0) {
+      // 至少保留一个标签页
+      return;
+    }
+    setOpenTabs(newTabs);
+    if (activeTab === key) {
+      const lastTab = newTabs[newTabs.length - 1];
+      setActiveTab(lastTab.key);
+      navigate(lastTab.key);
+    }
+  };
+
+  // 切换标签页
+  const handleTabClick = (key) => {
+    setActiveTab(key);
+    navigate(key);
+  };
+
+  // 获取当前页面标题
+  const currentTitle = pageTitleMap[location.pathname] || '页面';
 
   return (
     <Layout className="main-layout">
-      <Sider trigger={null} collapsible collapsed={collapsed} theme="dark" width={220}>
-        <div className="logo">
-          <h2>{collapsed ? '预算' : '智能预算平台'}</h2>
+      {/* 顶部蓝色导航栏 */}
+      <Header className="top-header">
+        <div className="header-left">
+          <div className="logo-area">
+            <ApiOutlined className="logo-icon" />
+            <span className="logo-text">智能预算平台</span>
+          </div>
         </div>
-        <div style={{ height: 'calc(100vh - 64px)', overflowY: 'auto', overflowX: 'hidden' }}>
-          <Menu
-            theme="dark"
-            mode="inline"
-            selectedKeys={[location.pathname]}
-            defaultOpenKeys={['dimension', 'master-data', 'mapping-table', 'budget', 'actual-data', 'actual-data-before', 'actual-data-summary', 'actual-sales', 'system', 'auth']}
-            items={menuItems}
-            onClick={({ key }) => navigate(key)}
-            style={{ marginTop: 8, borderRight: 0 }}
-          />
+        <div className="header-center">
+          <div className="workspace-tab">
+            <DashboardOutlined />
+            <span>工作台</span>
+          </div>
+          <div className="current-page-tab">
+            <span>{currentTitle}</span>
+            <CloseOutlined className="close-icon" />
+          </div>
+          <div className="add-tab-btn">
+            <PlusOutlined />
+          </div>
         </div>
-      </Sider>
-      
+        <div className="header-right">
+          <span className="user-name">管理员</span>
+        </div>
+      </Header>
+
       <Layout>
-        <Header className="site-header">
-          <div className="header-left">
-            {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-              className: 'trigger',
-              onClick: () => setCollapsed(!collapsed),
-            })}
+        {/* 左侧白色菜单 */}
+        <Sider 
+          className="left-sider"
+          trigger={null} 
+          collapsible 
+          collapsed={collapsed}
+          width={240}
+        >
+          <div className="search-area">
+            <Input
+              placeholder="全站搜索 (Ctrl+/)"
+              prefix={<SearchOutlined />}
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              allowClear
+            />
           </div>
-          
-          <div className="header-right">
-            <Badge count={5} size="small">
-              <BellOutlined className="header-icon" />
-            </Badge>
-            <Dropdown menu={{ items: userMenuItems }}>
-              <div className="user-info">
-                <Avatar icon={<UserOutlined />} />
-                <span className="username">管理员</span>
-              </div>
-            </Dropdown>
+          <div className="menu-container">
+            <Menu
+              mode="inline"
+              selectedKeys={[location.pathname]}
+              defaultOpenKeys={['dimension', 'master-data', 'mapping-table', 'budget', 'system']}
+              items={menuItems}
+              onClick={handleMenuClick}
+            />
           </div>
-        </Header>
-        
+          <div className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? '▶' : '◀'}
+          </div>
+        </Sider>
+
+        {/* 内容区域 */}
         <Content className="site-content">
           <Outlet />
         </Content>
