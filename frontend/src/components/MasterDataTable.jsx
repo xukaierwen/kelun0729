@@ -94,13 +94,6 @@ export default function MasterDataTable({
 
   // 表格列配置
   const tableColumns = [
-    {
-      title: '序号',
-      dataIndex: 'index',
-      key: 'index',
-      width: 60,
-      render: (_, __, index) => index + 1,
-    },
     ...columns.map(col => ({
       ...col,
       dataIndex: col.dataIndex || col.key,
