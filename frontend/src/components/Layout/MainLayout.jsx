@@ -228,14 +228,19 @@ function MainLayout() {
       // 有三级菜单
       setActiveSecondLevel(item.key);
     } else if (item.key.startsWith('/')) {
-      // 直接是页面路由
+      // 直接是页面路由 - 自动收起菜单
       navigate(item.key);
+      setActiveFirstLevel(null);
+      setActiveSecondLevel(null);
     }
   };
 
   // 点击三级菜单（最终页面）
   const handleThirdLevelClick = (key) => {
     navigate(key);
+    // 自动收起菜单面板
+    setActiveFirstLevel(null);
+    setActiveSecondLevel(null);
   };
 
   // 获取当前一级菜单的二级菜单
