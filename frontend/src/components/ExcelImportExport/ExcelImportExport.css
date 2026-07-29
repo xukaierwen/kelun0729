@@ -1,0 +1,21 @@
+.excel-import-export {
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.toolbar {
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.file-info {
+  color: #52c41a;
+  font-size: 14px;
+  padding: 4px 12px;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 4px;
+}
