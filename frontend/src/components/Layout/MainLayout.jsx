@@ -209,9 +209,16 @@ function MainLayout() {
       setActiveFirstLevel(null);
       setActiveSecondLevel(null);
     } else {
-      // 有二级菜单
-      setActiveFirstLevel(key);
-      setActiveSecondLevel(null);
+      // 有二级菜单 - 支持切换收起/展开
+      if (activeFirstLevel === key) {
+        // 再次点击同一个菜单，收起面板
+        setActiveFirstLevel(null);
+        setActiveSecondLevel(null);
+      } else {
+        // 点击不同的菜单，展开对应的二级菜单
+        setActiveFirstLevel(key);
+        setActiveSecondLevel(null);
+      }
     }
   };
 
