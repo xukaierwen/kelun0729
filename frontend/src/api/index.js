@@ -2,7 +2,10 @@ import axios from 'axios';
 
 // 创建axios实例
 const api = axios.create({
-  baseURL: '/api',
+  // 生产环境使用后端地址，开发环境使用 /api
+  baseURL: import.meta.env.PROD 
+    ? 'https://your-backend-url.com/api'  // 替换为你的后端地址
+    : '/api',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
