@@ -1,38 +1,26 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Input, Tag, Tabs } from 'antd';
+import { Layout, Menu, Input } from 'antd';
 import {
   DashboardOutlined,
   DatabaseOutlined,
-  LineChartOutlined,
-  FileTextOutlined,
-  BarChartOutlined,
+  DollarOutlined,
   SettingOutlined,
   UserOutlined,
   SearchOutlined,
-  CloseOutlined,
-  PlusOutlined,
-  AppstoreOutlined,
-  DollarOutlined,
-  BgColorsOutlined,
   ApiOutlined,
-  CodeOutlined,
-  BankOutlined,
-  FileSearchOutlined,
-  TeamOutlined,
-  ExperimentOutlined,
-  CheckSquareOutlined,
-  DollarCircleOutlined,
-  EnvironmentOutlined,
-  CloudServerOutlined,
-  MessageOutlined,
+  AppstoreOutlined,
+  FileTextOutlined,
+  LineChartOutlined,
+  BarChartOutlined,
+  BgColorsOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import './MainLayout.css';
 
 const { Header, Sider, Content } = Layout;
 
-// 菜单配置 - 带图标
-const menuItems = [
+// 一级菜单配置
+const firstLevelMenus = [
   {
     key: '/dashboard',
     icon: <DashboardOutlined />,
@@ -42,97 +30,11 @@ const menuItems = [
     key: 'dimension',
     icon: <DatabaseOutlined />,
     label: '维度管理',
-    children: [
-      {
-        key: 'master-data',
-        icon: <AppstoreOutlined />,
-        label: '主数据管理',
-        children: [
-          { key: '/dimension/master/type', label: '总部管理类型' },
-          { key: '/dimension/master/team', label: '总部管理团队' },
-          { key: '/dimension/master/business-mode', label: '业务模式' },
-          { key: '/dimension/master/sales-mode', label: '销售模式' },
-          { key: '/dimension/master/currency', label: '币种' },
-          { key: '/dimension/master/product', label: '产品主数据' },
-          { key: '/dimension/master/province', label: '省份' },
-          { key: '/dimension/master/sales-officer-hq', label: '一级业务员 (总部)' },
-          { key: '/dimension/master/sales-office', label: '销售办公室' },
-          { key: '/dimension/master/sales-group', label: '销售组 (片区业务员 1)' },
-          { key: '/dimension/master/region-dimension', label: '片区管理维度' },
-          { key: '/dimension/master/customer', label: '客户主数据' },
-          { key: '/dimension/master/entity', label: '实体' },
-          { key: '/dimension/master/department', label: '部门' },
-          { key: '/dimension/master/scenario', label: '场景' },
-          { key: '/dimension/master/version', label: '版本' },
-          { key: '/dimension/master/period', label: '期间' },
-          { key: '/dimension/master/year', label: '年份' },
-          { key: '/dimension/master/account', label: '科目' },
-          { key: '/dimension/master/project', label: '项目主数据' },
-        ],
-      },
-      {
-        key: 'mapping-table',
-        icon: <FileTextOutlined />,
-        label: '映射表管理',
-        children: [
-          { key: '/dimension/mapping/business-mode-config', label: '业务模式配置表' },
-          { key: '/dimension/mapping/product-owner-config', label: '产品负责人配置表' },
-          { key: '/dimension/mapping/product-arch', label: '产品架构表' },
-          { key: '/dimension/mapping/product-arch-mapping', label: '产品 - 架构映射表' },
-          { key: '/dimension/mapping/office-group', label: '销售办公室 - 销售组映射表' },
-          { key: '/dimension/mapping/region-salesman', label: '片区业务员 (片区业务员 2)' },
-          { key: '/dimension/mapping/pure-sales', label: '纯销数据' },
-          { key: '/dimension/mapping/commodity-class', label: '商品名分类配置表' },
-          { key: '/dimension/mapping/product-tag', label: '片区产品标识配置表' },
-          { key: '/dimension/mapping/dept-belong', label: '归属部门配置表' },
-          { key: '/dimension/mapping/hq-salesman', label: '一级业务员配置表' },
-          { key: '/dimension/mapping/salesman-entity', label: '业务员预算实体配置表' },
-          { key: '/dimension/mapping/customer-sap', label: '客户主数据映射表' },
-          { key: '/dimension/mapping/virtual-product', label: '虚拟产品映射表' },
-        ],
-      },
-    ],
   },
   {
     key: 'budget',
     icon: <DollarOutlined />,
     label: '预算管理',
-    children: [
-      {
-        key: 'actual-data',
-        icon: <LineChartOutlined />,
-        label: '实际数',
-        children: [
-          {
-            key: 'actual-data-before',
-            label: '实际数调整前',
-            children: [
-              {
-                key: 'actual-sales',
-                label: '销售实际数',
-                children: [
-                  { key: '/budget/actual-sales-digital', label: '数字营销' },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'actual-data-summary',
-            label: '实际数汇总查看',
-            children: [
-              { key: '/budget/actual-sales-summary', label: '销售实际数汇总查看' },
-            ],
-          },
-        ],
-      },
-      { key: '/budget/actual-before', icon: <LineChartOutlined />, label: '实际数调整前' },
-      { key: '/budget/planned-complete', icon: <LineChartOutlined />, label: '预计完成数' },
-      { key: '/budget/annual', icon: <BarChartOutlined />, label: '年度预算' },
-      { key: '/budget/adjust-plan', icon: <FileTextOutlined />, label: '预算调整 6+6' },
-      { key: '/budget/rolling-forecast', icon: <LineChartOutlined />, label: '滚动预测' },
-      { key: '/budget/analysis', icon: <BarChartOutlined />, label: '预实分析' },
-      { key: '/budget/calc-program', icon: <SettingOutlined />, label: '计算程序' },
-    ],
   },
   {
     key: '/ml-management',
@@ -143,20 +45,11 @@ const menuItems = [
     key: 'system',
     icon: <SettingOutlined />,
     label: '系统管理',
-    children: [
-      { key: '/system/params', label: '系统参数' },
-      { key: '/system/workflow', label: '审批流程' },
-      { key: '/system/dictionary', label: '字典管理' },
-    ],
   },
   {
     key: 'auth',
     icon: <UserOutlined />,
     label: '权限管理',
-    children: [
-      { key: '/auth/roles', label: '角色管理' },
-      { key: '/auth/permissions', label: '权限分配' },
-    ],
   },
   {
     key: '/logs/audit',
@@ -164,6 +57,87 @@ const menuItems = [
     label: '日志审计',
   },
 ];
+
+// 二级菜单配置
+const secondLevelMenus = {
+  dimension: [
+    {
+      key: 'master-data',
+      icon: <AppstoreOutlined />,
+      label: '主数据管理',
+      children: [
+        { key: '/dimension/master/type', label: '总部管理类型' },
+        { key: '/dimension/master/team', label: '总部管理团队' },
+        { key: '/dimension/master/business-mode', label: '业务模式' },
+        { key: '/dimension/master/sales-mode', label: '销售模式' },
+        { key: '/dimension/master/currency', label: '币种' },
+        { key: '/dimension/master/product', label: '产品主数据' },
+        { key: '/dimension/master/province', label: '省份' },
+        { key: '/dimension/master/sales-officer-hq', label: '一级业务员 (总部)' },
+        { key: '/dimension/master/sales-office', label: '销售办公室' },
+        { key: '/dimension/master/sales-group', label: '销售组 (片区业务员 1)' },
+        { key: '/dimension/master/region-dimension', label: '片区管理维度' },
+        { key: '/dimension/master/customer', label: '客户主数据' },
+        { key: '/dimension/master/entity', label: '实体' },
+        { key: '/dimension/master/department', label: '部门' },
+        { key: '/dimension/master/scenario', label: '场景' },
+        { key: '/dimension/master/version', label: '版本' },
+        { key: '/dimension/master/period', label: '期间' },
+        { key: '/dimension/master/year', label: '年份' },
+        { key: '/dimension/master/account', label: '科目' },
+        { key: '/dimension/master/project', label: '项目主数据' },
+      ],
+    },
+    {
+      key: 'mapping-table',
+      icon: <FileTextOutlined />,
+      label: '映射表管理',
+      children: [
+        { key: '/dimension/mapping/business-mode-config', label: '业务模式配置表' },
+        { key: '/dimension/mapping/product-owner-config', label: '产品负责人配置表' },
+        { key: '/dimension/mapping/product-arch', label: '产品架构表' },
+        { key: '/dimension/mapping/product-arch-mapping', label: '产品 - 架构映射表' },
+        { key: '/dimension/mapping/office-group', label: '销售办公室 - 销售组映射表' },
+        { key: '/dimension/mapping/region-salesman', label: '片区业务员 (片区业务员 2)' },
+        { key: '/dimension/mapping/pure-sales', label: '纯销数据' },
+        { key: '/dimension/mapping/commodity-class', label: '商品名分类配置表' },
+        { key: '/dimension/mapping/product-tag', label: '片区产品标识配置表' },
+        { key: '/dimension/mapping/dept-belong', label: '归属部门配置表' },
+        { key: '/dimension/mapping/hq-salesman', label: '一级业务员配置表' },
+        { key: '/dimension/mapping/salesman-entity', label: '业务员预算实体配置表' },
+        { key: '/dimension/mapping/customer-sap', label: '客户主数据映射表' },
+        { key: '/dimension/mapping/virtual-product', label: '虚拟产品映射表' },
+      ],
+    },
+  ],
+  budget: [
+    {
+      key: 'actual-data',
+      icon: <LineChartOutlined />,
+      label: '实际数',
+      children: [
+        { key: '/budget/actual-sales-digital', label: '数字营销' },
+        { key: '/budget/actual-sales-summary', label: '销售实际数汇总查看' },
+      ],
+    },
+    { key: '/budget/actual-before', icon: <LineChartOutlined />, label: '实际数调整前' },
+    { key: '/budget/planned-complete', icon: <LineChartOutlined />, label: '预计完成数' },
+    { key: '/budget/annual', icon: <BarChartOutlined />, label: '年度预算' },
+    { key: '/budget/adjust-plan', icon: <FileTextOutlined />, label: '预算调整 6+6' },
+    { key: '/budget/rolling-forecast', icon: <LineChartOutlined />, label: '滚动预测' },
+    { key: '/budget/analysis', icon: <BarChartOutlined />, label: '预实分析' },
+    { key: '/budget/calc-program', icon: <SettingOutlined />, label: '计算程序' },
+  ],
+  system: [
+    { key: '/system/params', label: '系统参数' },
+    { key: '/system/workflow', label: '审批流程' },
+    { key: '/system/dictionary', label: '字典管理' },
+  ],
+  auth: [
+    { key: '/auth/roles', label: '角色管理' },
+    { key: '/auth/permissions', label: '权限分配' },
+  ],
+};
 
 // 页面标题映射
 const pageTitleMap = {
@@ -221,51 +195,49 @@ const pageTitleMap = {
 };
 
 function MainLayout() {
-  const [collapsed, setCollapsed] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [openTabs, setOpenTabs] = useState([{ key: '/dashboard', title: '首页概览' }]);
-  const [activeTab, setActiveTab] = useState('/dashboard');
+  const [activeFirstLevel, setActiveFirstLevel] = useState(null);
+  const [activeSecondLevel, setActiveSecondLevel] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 菜单点击 - 打开标签页
-  const handleMenuClick = ({ key }) => {
+  // 点击一级菜单
+  const handleFirstLevelClick = (key) => {
     if (key.startsWith('/')) {
-      const title = pageTitleMap[key] || key;
-      // 如果标签页已存在，直接切换
-      if (openTabs.find(tab => tab.key === key)) {
-        setActiveTab(key);
-        navigate(key);
-      } else {
-        // 添加新标签页
-        setOpenTabs([...openTabs, { key, title }]);
-        setActiveTab(key);
-        navigate(key);
-      }
+      // 直接是页面路由
+      navigate(key);
+      setActiveFirstLevel(null);
+      setActiveSecondLevel(null);
+    } else {
+      // 有二级菜单
+      setActiveFirstLevel(key);
+      setActiveSecondLevel(null);
     }
   };
 
-  // 关闭标签页
-  const handleCloseTab = (key, e) => {
-    e.stopPropagation();
-    const newTabs = openTabs.filter(tab => tab.key !== key);
-    if (newTabs.length === 0) {
-      // 至少保留一个标签页
-      return;
-    }
-    setOpenTabs(newTabs);
-    if (activeTab === key) {
-      const lastTab = newTabs[newTabs.length - 1];
-      setActiveTab(lastTab.key);
-      navigate(lastTab.key);
+  // 点击二级菜单
+  const handleSecondLevelClick = (item) => {
+    if (item.children) {
+      // 有三级菜单
+      setActiveSecondLevel(item.key);
+    } else if (item.key.startsWith('/')) {
+      // 直接是页面路由
+      navigate(item.key);
     }
   };
 
-  // 切换标签页
-  const handleTabClick = (key) => {
-    setActiveTab(key);
+  // 点击三级菜单（最终页面）
+  const handleThirdLevelClick = (key) => {
     navigate(key);
   };
+
+  // 获取当前一级菜单的二级菜单
+  const currentSecondLevel = activeFirstLevel ? secondLevelMenus[activeFirstLevel] || [] : [];
+  
+  // 获取当前二级菜单的三级菜单
+  const currentThirdLevel = activeSecondLevel 
+    ? currentSecondLevel.find(item => item.key === activeSecondLevel)?.children || []
+    : [];
 
   // 获取当前页面标题
   const currentTitle = pageTitleMap[location.pathname] || '页面';
@@ -287,10 +259,6 @@ function MainLayout() {
           </div>
           <div className="current-page-tab">
             <span>{currentTitle}</span>
-            <CloseOutlined className="close-icon" />
-          </div>
-          <div className="add-tab-btn">
-            <PlusOutlined />
           </div>
         </div>
         <div className="header-right">
@@ -298,37 +266,75 @@ function MainLayout() {
         </div>
       </Header>
 
-      <Layout>
-        {/* 左侧白色菜单 */}
-        <Sider 
-          className="left-sider"
-          trigger={null} 
-          collapsible 
-          collapsed={collapsed}
-          width={240}
-        >
+      <Layout className="body-layout">
+        {/* 左侧一级菜单 */}
+        <Sider className="first-level-sider" width={200} theme="light">
           <div className="search-area">
             <Input
-              placeholder="全站搜索 (Ctrl+/)"
+              placeholder="全站搜索"
               prefix={<SearchOutlined />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               allowClear
+              size="small"
             />
           </div>
-          <div className="menu-container">
-            <Menu
-              mode="inline"
-              selectedKeys={[location.pathname]}
-              defaultOpenKeys={['dimension', 'master-data', 'mapping-table', 'budget', 'system']}
-              items={menuItems}
-              onClick={handleMenuClick}
-            />
-          </div>
-          <div className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
-            {collapsed ? '▶' : '◀'}
+          <div className="first-level-menu">
+            {firstLevelMenus.map(item => (
+              <div
+                key={item.key}
+                className={`first-level-item ${activeFirstLevel === item.key ? 'active' : ''} ${location.pathname === item.key ? 'selected' : ''}`}
+                onClick={() => handleFirstLevelClick(item.key)}
+              >
+                <span className="menu-icon">{item.icon}</span>
+                <span className="menu-label">{item.label}</span>
+                {secondLevelMenus[item.key] && <span className="arrow-icon">›</span>}
+              </div>
+            ))}
           </div>
         </Sider>
+
+        {/* 二级菜单面板 */}
+        {activeFirstLevel && (
+          <div className="second-level-panel">
+            <div className="panel-header">
+              <span>{firstLevelMenus.find(m => m.key === activeFirstLevel)?.label}</span>
+            </div>
+            <div className="second-level-menu">
+              {currentSecondLevel.map(item => (
+                <div
+                  key={item.key}
+                  className={`second-level-item ${activeSecondLevel === item.key ? 'active' : ''}`}
+                  onClick={() => handleSecondLevelClick(item)}
+                >
+                  <span className="menu-icon">{item.icon}</span>
+                  <span className="menu-label">{item.label}</span>
+                  {item.children && <span className="arrow-icon">›</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 三级菜单面板 */}
+        {activeSecondLevel && currentThirdLevel.length > 0 && (
+          <div className="third-level-panel">
+            <div className="panel-header">
+              <span>{currentSecondLevel.find(m => m.key === activeSecondLevel)?.label}</span>
+            </div>
+            <div className="third-level-menu">
+              {currentThirdLevel.map(item => (
+                <div
+                  key={item.key}
+                  className={`third-level-item ${location.pathname === item.key ? 'active' : ''}`}
+                  onClick={() => handleThirdLevelClick(item.key)}
+                >
+                  <span className="menu-label">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 内容区域 */}
         <Content className="site-content">
