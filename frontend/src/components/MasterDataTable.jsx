@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import {
   Table, Button, Space, Modal, Form, Input, Select, Popconfirm,
-  Card, message, Tag,
+  Card, message, Tag, DatePicker,
 } from 'antd'
 import {
   PlusOutlined, EditOutlined, StopOutlined, SearchOutlined,
   ReloadOutlined, ExportOutlined, ImportOutlined,
 } from '@ant-design/icons'
+import dayjs from 'dayjs'
 
 export default function MasterDataTable({
   tableName,
@@ -58,8 +59,20 @@ export default function MasterDataTable({
   // 提交表单
   const handleSave = async () => {
     const values = await form.validateFields()
+    
+    // 处理日期字段，将 dayjs 对象转换为字符串
+    const processedValues = { ...values }
+    columns.forEach(col => {
+      if (col.inputType === 'date' && processedValues[col.dataIndex || col.key]) {
+        const dateVal = processedValues[col.dataIndex || col.key]
+        if (dayjs.isDayjs(dateVal)) {
+          processedValues[col.dataIndex || col.key] = dateVal.format('YYYY-MM-DD')
+        }
+      }
+    })
+    
     const record = {
-      ...values,
+      ...processedValues,
       id: editingRecord?.id || `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       updatedAt: new Date().toLocaleString(),
     }
@@ -96,6 +109,8 @@ export default function MasterDataTable({
         <Tag color={val === 1 || val === '启用' ? 'green' : 'red'}>
           {val === 1 ? '启用' : val === 0 ? '禁用' : val}
         </Tag>
+      ) : col.inputType === 'date' ? (val) => (
+        val ? (dayjs.isDayjs(val) ? val.format('YYYY-MM-DD') : val) : '-'
       ) : undefined,
     })),
     {
@@ -188,10 +203,17 @@ export default function MasterDataTable({
         }}
         okText="保存"
         cancelText="取消"
+        width={600}
       >
         <Form form={form} layout="vertical">
           {columns.map(col => {
             const fieldName = col.dataIndex || col.key
+
+            // 处理日期字段的初始值
+            let initialValue = undefined
+            if (col.inputType === 'date' && editingRecord?.[fieldName]) {
+              initialValue = dayjs(editingRecord[fieldName])
+            }
 
             return (
               <Form.Item
@@ -199,6 +221,7 @@ export default function MasterDataTable({
                 name={fieldName}
                 label={col.title}
                 rules={col.rules || [{ required: true, message: `请输入${col.title}` }]}
+                initialValue={initialValue}
               >
                 {col.inputType === 'select' ? (
                   <Select
@@ -209,6 +232,12 @@ export default function MasterDataTable({
                     filterOption={(input, option) =>
                       String(option.label).toLowerCase().includes(input.toLowerCase())
                     }
+                  />
+                ) : col.inputType === 'date' ? (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format="YYYY-MM-DD"
+                    placeholder={`请选择${col.title}`}
                   />
                 ) : col.inputType === 'textarea' ? (
                   <Input.TextArea rows={3} />
