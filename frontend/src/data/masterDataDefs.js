@@ -1,242 +1,321 @@
-// 主数据表结构定义 - 根据文档字段要求更新
+// 主数据表结构定义 - 根据最新文档字段要求更新
 export const MASTER_DATA_DEFS = {
-  // 基础维度表
   'md-mgmt-type': {
     name: '总部管理类型',
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'manage_type_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'manage_type_name', title: '名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'manage_type_code', title: '总部管理类型编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'manage_type_name', title: '总部管理类型名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
     ],
   },
   'md-mgmt-team': {
     name: '总部管理团队',
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'manage_team_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'manage_team_name', title: '名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'manage_type', title: '总部类型编码', key: 'hq_type_code' },
-      { dataIndex: 'manage_name', title: '总部类型名称', key: 'hq_type_name' },
+      { dataIndex: 'manage_team_code', title: '总部管理团队编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'manage_team_name', title: '总部管理团队名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'manage_type_code', title: '所属总部管理类型编码', key: 'manage_type_code' },
+      { dataIndex: 'manage_type_name', title: '所属总部管理类型名称', key: 'manage_type_name' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
     ],
   },
   'md-business-mode': {
     name: '业务模式',
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'business_model_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'business_model_name', title: '名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
-      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
-    ],
-  },
-  'md-sales-mode': {
-    name: '销售模式',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'sales_model_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'sales_model_name', title: '名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'business_model_code', title: '业务模式编码', key: 'bm_code' },
-      { dataIndex: 'business_model_name', title: '业务模式名称', key: 'bm_name' },
-      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
-      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
-    ],
-  },
-  'md-currency': {
-    name: '币种',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'currency_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'currency_name', title: '名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'sort_order', title: '排序号', key: 'sort_order' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
-    ],
-  },
-
-  // 产品主数据
-  'md-product': {
-    name: '产品主数据',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'product_code', title: '产品编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'product_name', title: '产品名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'spec', title: '规格', key: 'spec' },
-      { dataIndex: 'package_spec', title: '包装规格', key: 'package_spec' },
-      { dataIndex: 'product_type', title: '产品类型', key: 'product_type', inputType: 'select', options: [
-        { label: '制药', value: '制药' },
-        { label: '医疗', value: '医疗' },
-        { label: '日化', value: '日化' },
-      ]},
-      { dataIndex: 'package_class', title: '包装分类', key: 'package_class' },
-      { dataIndex: 'unit', title: '计量单位', key: 'unit' },
-      { dataIndex: 'approval_manufacturer', title: '批文厂家', key: 'approval_manufacturer' },
-      { dataIndex: 'produce_manufacturer', title: '生产厂家', key: 'produce_manufacturer' },
-      { dataIndex: 'min_unit_convert_rate', title: '最小单位转换率', key: 'min_unit_convert_rate' },
-      { dataIndex: 'group_purchase_attr', title: '集采属性', key: 'group_purchase_attr' },
-      { dataIndex: 'group_purchase_batch', title: '集采批次', key: 'group_purchase_batch' },
-      { dataIndex: 'min_unit', title: '最小单位', key: 'min_unit' },
-      { dataIndex: 'is_virtual', title: '是否虚拟', key: 'is_virtual', inputType: 'select', options: [
+      { dataIndex: 'business_model_code', title: '业务模式编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'business_model_name', title: '业务模式名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
         { label: '是', value: 1 },
         { label: '否', value: 0 },
       ]},
-      { dataIndex: 'valid_from', title: '生效日期', key: 'valid_from' },
-      { dataIndex: 'valid_to', title: '失效日期', key: 'valid_to' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
     ],
   },
-
-  // 其他维度表
+  'md-sales-mode': {
+    name: '片区销售模式',
+    columns: [
+      { dataIndex: 'seq', title: '序号', key: 'seq' },
+      { dataIndex: 'sales_model_code', title: '片区销售模式编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'sales_model_name', title: '片区销售模式名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'business_model_code', title: '所属业务模式编码', key: 'business_model_code' },
+      { dataIndex: 'business_model_name', title: '所属业务模式名称', key: 'business_model_name' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
+    ],
+  },
   'md-province': {
     name: '省份',
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'province_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'province_name', title: '名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'province_code', title: '省份编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'province_name', title: '省份名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'province_short', title: '省份简称', key: 'province_short' },
+      { dataIndex: 'manage_team_code', title: '所属总部管理团队编码', key: 'manage_team_code' },
+      { dataIndex: 'manage_team_name', title: '所属总部管理团队名称', key: 'manage_team_name' },
+      { dataIndex: 'manage_type_code', title: '所属总部管理类型编码', key: 'manage_type_code' },
+      { dataIndex: 'manage_type_name', title: '所属总部管理类型名称', key: 'manage_type_name' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
     ],
   },
-  'md-sales-officer-hq': {
-    name: '一级业务员(总部)',
+  'md-region': {
+    name: '片区',
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'salesman_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'salesman_name', title: '名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'region_code', title: '片区编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'region_name', title: '片区名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'province_code', title: '片区所属省份编码', key: 'province_code' },
+      { dataIndex: 'province_name', title: '片区所属省份名称', key: 'province_name' },
+      { dataIndex: 'province_short', title: '片区所属省份简称', key: 'province_short' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
-    ],
-  },
-  'md-sales-office': {
-    name: '销售办公室',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'office_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'office_name', title: '名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
-      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
-    ],
-  },
-  'md-sales-group': {
-    name: '销售组(片区业务员1)',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'group_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'group_name', title: '名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
-      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
-    ],
-  },
-  'md-region-dimension': {
-    name: '片区管理维度',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'area_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'area_name', title: '名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
-      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
     ],
   },
   'md-entity': {
     name: '实体',
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'entity_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'entity_name', title: '名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'entity_code', title: '实体编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'entity_name', title: '实体名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'parent_entity_code', title: '父级实体编码', key: 'parent_entity_code' },
+      { dataIndex: 'company_nature', title: '公司性质', key: 'company_nature' },
+      { dataIndex: 'is_fee_control', title: '是否上线费控', key: 'is_fee_control', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'entity_type', title: '实体类型', key: 'entity_type' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+    ],
+  },
+  'md-sales-group': {
+    name: '销售组',
+    columns: [
+      { dataIndex: 'group_code', title: '销售组编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'group_name', title: '销售组名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'office_code', title: '所属销售办公室编码', key: 'office_code' },
+      { dataIndex: 'office_name', title: '所属销售办公室名称', key: 'office_name' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
+    ],
+  },
+  'md-sales-office': {
+    name: '销售办公室',
+    columns: [
+      { dataIndex: 'office_code', title: '销售办公室编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'office_name', title: '销售办公室名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
+    ],
+  },
+  'md-sales-officer-hq': {
+    name: '一级业务员（总部）',
+    columns: [
+      { dataIndex: 'seq', title: '序号', key: 'seq' },
+      { dataIndex: 'salesman_code', title: '编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'salesman_name', title: '名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'parent_code', title: '上级编码', key: 'parent_code' },
+      { dataIndex: 'level', title: '所在层级', key: 'level' },
+      { dataIndex: 'is_leaf', title: '是否末级', key: 'is_leaf', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
+    ],
+  },
+  'md-region-dimension': {
+    name: '片区管理区域',
+    columns: [
+      { dataIndex: 'area_code', title: '片区管理区域编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'area_name', title: '片区管理区域名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'budget_entity_code', title: '所属预算实体编码', key: 'budget_entity_code' },
+      { dataIndex: 'budget_entity_name', title: '所属预算实体名称', key: 'budget_entity_name' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
     ],
   },
   'md-customer': {
     name: '客户',
     columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'customer_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'customer_name', title: '名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'customer_code', title: '销管平台客户编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'customer_name', title: '销管平台客户名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'sap_customer_code', title: 'SAP客户编码', key: 'sap_customer_code' },
+      { dataIndex: 'sap_customer_name', title: 'SAP客户名称', key: 'sap_customer_name' },
+      { dataIndex: 'is_internal', title: '是否内部关联客户', key: 'is_internal', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'customer_type', title: '客户类型', key: 'customer_type' },
+      { dataIndex: 'customer_province', title: '客户所在省份', key: 'customer_province' },
+      { dataIndex: 'customer_activity', title: '客户活跃度', key: 'customer_activity' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+    ],
+  },
+  'md-product': {
+    name: '产品',
+    columns: [
+      { dataIndex: 'seq', title: '序号', key: 'seq' },
+      { dataIndex: 'product_code', title: '产品编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'product_name', title: '产品名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'generic_name', title: '产品通用名', key: 'generic_name' },
+      { dataIndex: 'spec', title: '规格', key: 'spec' },
+      { dataIndex: 'package_spec', title: '包装规格', key: 'package_spec' },
+      { dataIndex: 'product_type', title: '类型', key: 'product_type' },
+      { dataIndex: 'package_class', title: '包装分类', key: 'package_class' },
+      { dataIndex: 'unit_code', title: '计量单位编码', key: 'unit_code' },
+      { dataIndex: 'unit_name', title: '计量单位名称', key: 'unit_name' },
+      { dataIndex: 'approval_mfr_code', title: '批文厂家编码', key: 'approval_mfr_code' },
+      { dataIndex: 'approval_mfr_name', title: '批文厂家名称', key: 'approval_mfr_name' },
+      { dataIndex: 'produce_mfr_code', title: '生产厂家编码', key: 'produce_mfr_code' },
+      { dataIndex: 'produce_mfr_name', title: '生产厂家名称', key: 'produce_mfr_name' },
+      { dataIndex: 'min_unit_code', title: '最小单位编码', key: 'min_unit_code' },
+      { dataIndex: 'min_unit_name', title: '最小单位名称', key: 'min_unit_name' },
+      { dataIndex: 'min_unit_convert_rate', title: '最小规格转换率', key: 'min_unit_convert_rate' },
+      { dataIndex: 'material_type_code', title: '物料类型编码', key: 'material_type_code' },
+      { dataIndex: 'material_type_name', title: '物料类型名称', key: 'material_type_name' },
+      { dataIndex: 'material_group_code', title: '物料组编码', key: 'material_group_code' },
+      { dataIndex: 'material_group_name', title: '物料组名称', key: 'material_group_name' },
+      { dataIndex: 'group_purchase_attr', title: '集采属性', key: 'group_purchase_attr' },
+      { dataIndex: 'group_purchase_batch', title: '集采批次', key: 'group_purchase_batch' },
+      { dataIndex: 'special_tax_rate', title: '特殊销项税率', key: 'special_tax_rate' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
+    ],
+  },
+  'md-product-arch': {
+    name: '产品架构',
+    columns: [
+      { dataIndex: 'arch_code', title: '编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'arch_name', title: '名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'parent_code', title: '父级编码', key: 'parent_code' },
+      { dataIndex: 'parent_name', title: '父级名称', key: 'parent_name' },
     ],
   },
   'md-department': {
     name: '部门',
     columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'dept_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'dept_name', title: '名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'parent_code', title: '上级编码', key: 'parent_code' },
+      { dataIndex: 'dept_code', title: '部门编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'dept_name', title: '部门名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'entity_code', title: '所属实体编码', key: 'entity_code' },
+      { dataIndex: 'entity_name', title: '所属实体名称', key: 'entity_name' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
     ],
     isTree: true,
+  },
+  'md-salesman-hn': {
+    name: '业务员（湖南湖北专用）',
+    columns: [
+      { dataIndex: 'salesman_code', title: '业务员编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'salesman_name', title: '业务员名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'entity_code', title: '所属实体编码', key: 'entity_code' },
+      { dataIndex: 'entity_name', title: '所属实体名称', key: 'entity_name' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
+    ],
+  },
+  'md-flow-unit': {
+    name: '流向单位（湖南专用）',
+    columns: [
+      { dataIndex: 'flow_unit_code', title: '流向单位编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'flow_unit_name', title: '流向单位名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
+    ],
   },
   'md-scenario': {
     name: '场景',
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'scenario_code', title: '编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'scenario_name', title: '名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'scenario_code', title: '场景编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'scenario_name', title: '场景名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+    ],
+  },
+  'md-data-scope': {
+    name: '数据口径',
+    columns: [
+      { dataIndex: 'seq', title: '序号', key: 'seq' },
+      { dataIndex: 'data_scope_code', title: '数据口径编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'data_scope_name', title: '数据口径名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
     ],
   },
   'md-version': {
@@ -245,11 +324,26 @@ export const MASTER_DATA_DEFS = {
       { dataIndex: 'seq', title: '序号', key: 'seq' },
       { dataIndex: 'version_code', title: '版本编码', key: 'code', rules: [{ required: true }] },
       { dataIndex: 'version_name', title: '版本名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'sort_order', title: '排序号', key: 'sort_order' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
+    ],
+  },
+  'md-year': {
+    name: '年份',
+    columns: [
+      { dataIndex: 'seq', title: '序号', key: 'seq' },
+      { dataIndex: 'year_code', title: '年份编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'year_value', title: '年份', key: 'year_value' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
+      ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
     ],
   },
   'md-period': {
@@ -258,70 +352,47 @@ export const MASTER_DATA_DEFS = {
       { dataIndex: 'seq', title: '序号', key: 'seq' },
       { dataIndex: 'period_code', title: '期间编码', key: 'code', rules: [{ required: true }] },
       { dataIndex: 'period_name', title: '期间名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'sort_order', title: '排序号', key: 'sort_order' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'quarter', title: '所属季度', key: 'quarter' },
+      { dataIndex: 'half_year', title: '半年', key: 'half_year' },
+      { dataIndex: 'full_year', title: '全年', key: 'full_year' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
-    ],
-  },
-  'md-year': {
-    name: '年份',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'year_code', title: '年份编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'year_name', title: '年份名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'sort_order', title: '排序号', key: 'sort_order' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
     ],
   },
   'md-account': {
-    name: '科目',
+    name: '科目维度',
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
       { dataIndex: 'account_code', title: '科目编码', key: 'code', rules: [{ required: true }] },
       { dataIndex: 'account_name', title: '科目名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'account_type', title: '科目类型', key: 'account_type' },
-      { dataIndex: 'parent_code', title: '上级编码', key: 'parent_code' },
-      { dataIndex: 'sort_order', title: '排序号', key: 'sort_order' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'parent_code', title: '父级编码', key: 'parent_code' },
+      { dataIndex: 'parent_name', title: '父级名称', key: 'parent_name' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
+      { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
+      { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
     ],
     isTree: true,
   },
-  'md-project': {
-    name: '项目主数据',
+  'md-currency': {
+    name: '币种',
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'project_code', title: '项目编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'project_name', title: '项目名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'parent_code', title: '父级编码', key: 'parent_code' },
-      { dataIndex: 'parent_name', title: '父级名称', key: 'parent_name' },
-      { dataIndex: 'project_type', title: '项目类型', key: 'project_type' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'currency_code', title: '币种编码', key: 'code', rules: [{ required: true }] },
+      { dataIndex: 'currency_name', title: '币种名称', key: 'name', rules: [{ required: true }] },
+      { dataIndex: 'country', title: '国家', key: 'country' },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
-    ],
-  },
-  'md-delivery-mode': {
-    name: '医贸发货模式',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'delivery_mode_code', title: '发货模式编码', key: 'code', rules: [{ required: true }] },
-      { dataIndex: 'delivery_mode_name', title: '发货模式名称', key: 'name', rules: [{ required: true }] },
-      { dataIndex: 'sort_order', title: '排序号', key: 'sort_order' },
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
     ],
   },
 }
@@ -346,9 +417,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'salesman_name', title: '业务员姓名', key: 'salesman_name' },
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -366,9 +437,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'user_name', title: '姓名', key: 'user_name' },
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -380,9 +451,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'sales_office_name', title: '销售办公室名称', key: 'sales_office_name' },
       { dataIndex: 'sales_group_code', title: '销售组编码', key: 'sales_group_code' },
       { dataIndex: 'sales_group_name', title: '销售组名称', key: 'sales_group_name' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -402,9 +473,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'terminal_customer_name', title: '终端客户名称', key: 'terminal_customer_name' },
       { dataIndex: 'salesman_code', title: '业务员编码', key: 'salesman_code' },
       { dataIndex: 'salesman_name', title: '业务员名称', key: 'salesman_name' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -415,9 +486,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'goods_class_name', title: '商品分类名称', key: 'goods_class_name' },
       { dataIndex: 'product_code', title: '产品编码', key: 'product_code' },
       { dataIndex: 'product_name', title: '产品名称', key: 'product_name' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -428,9 +499,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'product_analysis_arch_code', title: '产品分析架构编码', key: 'product_arch_code' },
       { dataIndex: 'product_analysis_arch_name', title: '产品分析架构名称', key: 'product_arch_name' },
       { dataIndex: 'tag', title: '标识', key: 'tag' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -444,9 +515,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'budget_center_name', title: '预算中心名称', key: 'budget_center_name' },
       { dataIndex: 'valid_from', title: '生效时间', key: 'valid_from', inputType: 'date' },
       { dataIndex: 'valid_to', title: '失效时间', key: 'valid_to', inputType: 'date' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -458,9 +529,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'sales_office_name', title: '销售办公室名称', key: 'sales_office_name' },
       { dataIndex: 'hq_salesman_code', title: '一级业务员编码', key: 'salesman_code' },
       { dataIndex: 'hq_salesman_name', title: '一级业务员名称', key: 'salesman_name' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -472,9 +543,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'salesman_name', title: '业务员名称', key: 'salesman_name' },
       { dataIndex: 'budget_entity_code', title: '预算实体编码', key: 'budget_entity_code' },
       { dataIndex: 'budget_entity_name', title: '预算实体名称', key: 'budget_entity_name' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -486,9 +557,9 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'sap_customer_name', title: 'SAP客户名称', key: 'sap_customer_name' },
       { dataIndex: 'flow_customer_code', title: '流向客户编码', key: 'flow_customer_code' },
       { dataIndex: 'flow_customer_name', title: '流向客户名称', key: 'flow_customer_name' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
     ],
   },
@@ -500,46 +571,10 @@ export const MAPPING_TABLE_DEFS = {
       { dataIndex: 'virtual_product_name', title: '虚拟产品名称', key: 'virtual_product_name' },
       { dataIndex: 'formal_product_code', title: '正式产品编码', key: 'formal_product_code' },
       { dataIndex: 'formal_product_name', title: '正式产品名称', key: 'formal_product_name' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
+      { dataIndex: 'is_valid', title: '是否有效', key: 'is_valid', inputType: 'select', options: [
+        { label: '是', value: 1 },
+        { label: '否', value: 0 },
       ]},
-    ],
-  },
-  'map-product-arch': {
-    name: '产品架构表',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'arch_code', title: '架构编码', key: 'arch_code' },
-      { dataIndex: 'arch_name', title: '架构名称', key: 'arch_name' },
-      { dataIndex: 'parent_code', title: '父级编码', key: 'parent_code' },
-      { dataIndex: 'parent_name', title: '父级名称', key: 'parent_name' },
-      { dataIndex: 'arch_type', title: '架构类型', key: 'arch_type' },
-      { dataIndex: 'status', title: '状态', key: 'status', inputType: 'select', options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 },
-      ]},
-    ],
-  },
-  'map-product-arch-mapping': {
-    name: '产品-架构映射表',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'product_code', title: '产品编码', key: 'product_code' },
-      { dataIndex: 'product_name', title: '产品名称', key: 'product_name' },
-      { dataIndex: 'arch_code', title: '架构编码', key: 'arch_code' },
-      { dataIndex: 'arch_name', title: '架构名称', key: 'arch_name' },
-    ],
-  },
-  'map-pure-sales': {
-    name: '纯销数据',
-    columns: [
-      { dataIndex: 'seq', title: '序号', key: 'seq' },
-      { dataIndex: 'year', title: '年份', key: 'year' },
-      { dataIndex: 'customer_code', title: '客户编码', key: 'customer_code' },
-      { dataIndex: 'product_code', title: '产品编码', key: 'product_code' },
-      { dataIndex: 'quantity', title: '数量', key: 'quantity' },
-      { dataIndex: 'amount', title: '金额', key: 'amount' },
     ],
   },
 }

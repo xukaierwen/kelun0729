@@ -98,9 +98,9 @@ export default function MasterDataTable({
       ...col,
       dataIndex: col.dataIndex || col.key,
       key: col.key || col.dataIndex,
-      render: col.dataIndex === 'status' ? (val) => (
-        <Tag color={val === 1 || val === '启用' ? 'green' : 'red'}>
-          {val === 1 ? '启用' : val === 0 ? '禁用' : val}
+      render: col.dataIndex === 'is_valid' ? (val) => (
+        <Tag color={val === 1 || val === '是' ? 'green' : 'red'}>
+          {val === 1 ? '是' : val === 0 ? '否' : val}
         </Tag>
       ) : col.inputType === 'date' ? (val) => (
         val ? (dayjs.isDayjs(val) ? val.format('YYYY-MM-DD') : val) : '-'

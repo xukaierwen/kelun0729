@@ -53,23 +53,27 @@ function App() {
             <Route path="dimension/master/type" element={renderMasterDataPage('md-mgmt-type', '总部管理类型')} />
             <Route path="dimension/master/team" element={renderMasterDataPage('md-mgmt-team', '总部管理团队')} />
             <Route path="dimension/master/business-mode" element={renderMasterDataPage('md-business-mode', '业务模式')} />
-            <Route path="dimension/master/sales-mode" element={renderMasterDataPage('md-sales-mode', '销售模式')} />
-            <Route path="dimension/master/currency" element={renderMasterDataPage('md-currency', '币种')} />
-            <Route path="dimension/master/product" element={renderMasterDataPage('md-product', '产品主数据')} />
+            <Route path="dimension/master/sales-mode" element={renderMasterDataPage('md-sales-mode', '片区销售模式')} />
             <Route path="dimension/master/province" element={renderMasterDataPage('md-province', '省份')} />
-            <Route path="dimension/master/sales-officer-hq" element={renderMasterDataPage('md-sales-officer-hq', '一级业务员(总部)')} />
-            <Route path="dimension/master/sales-office" element={renderMasterDataPage('md-sales-office', '销售办公室')} />
-            <Route path="dimension/master/sales-group" element={renderMasterDataPage('md-sales-group', '销售组')} />
-            <Route path="dimension/master/region-dimension" element={renderMasterDataPage('md-region-dimension', '片区管理维度')} />
-            <Route path="dimension/master/customer" element={renderMasterDataPage('md-customer', '客户主数据')} />
+            <Route path="dimension/master/region" element={renderMasterDataPage('md-region', '片区')} />
             <Route path="dimension/master/entity" element={renderMasterDataPage('md-entity', '实体')} />
+            <Route path="dimension/master/sales-group" element={renderMasterDataPage('md-sales-group', '销售组')} />
+            <Route path="dimension/master/sales-office" element={renderMasterDataPage('md-sales-office', '销售办公室')} />
+            <Route path="dimension/master/sales-officer-hq" element={renderMasterDataPage('md-sales-officer-hq', '一级业务员（总部）')} />
+            <Route path="dimension/master/region-dimension" element={renderMasterDataPage('md-region-dimension', '片区管理区域')} />
+            <Route path="dimension/master/customer" element={renderMasterDataPage('md-customer', '客户')} />
+            <Route path="dimension/master/product" element={renderMasterDataPage('md-product', '产品')} />
+            <Route path="dimension/master/product-arch" element={renderMasterDataPage('md-product-arch', '产品架构')} />
             <Route path="dimension/master/department" element={renderMasterDataPage('md-department', '部门')} />
+            <Route path="dimension/master/salesman-hn" element={renderMasterDataPage('md-salesman-hn', '业务员（湖南湖北专用）')} />
+            <Route path="dimension/master/flow-unit" element={renderMasterDataPage('md-flow-unit', '流向单位（湖南专用）')} />
             <Route path="dimension/master/scenario" element={renderMasterDataPage('md-scenario', '场景')} />
+            <Route path="dimension/master/data-scope" element={renderMasterDataPage('md-data-scope', '数据口径')} />
             <Route path="dimension/master/version" element={renderMasterDataPage('md-version', '版本')} />
-            <Route path="dimension/master/period" element={renderMasterDataPage('md-period', '期间')} />
             <Route path="dimension/master/year" element={renderMasterDataPage('md-year', '年份')} />
-            <Route path="dimension/master/account" element={renderMasterDataPage('md-account', '科目')} />
-            <Route path="dimension/master/project" element={renderMasterDataPage('md-project', '项目主数据')} />
+            <Route path="dimension/master/period" element={renderMasterDataPage('md-period', '期间')} />
+            <Route path="dimension/master/account" element={renderMasterDataPage('md-account', '科目维度')} />
+            <Route path="dimension/master/currency" element={renderMasterDataPage('md-currency', '币种')} />
             
             {/* 维度管理 - 映射表管理 */}
             <Route path="dimension/mapping/business-mode-config" element={renderMappingPage('map-business-mode-config', '业务模式配置表')} />
