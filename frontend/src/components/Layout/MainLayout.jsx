@@ -358,6 +358,7 @@ function MainLayout() {
   const [activeFirstLevel, setActiveFirstLevel] = useState(null);
   const [activeSecondLevel, setActiveSecondLevel] = useState(null);
   const [activeThirdLevel, setActiveThirdLevel] = useState(null);
+  const [activeFourthLevel, setActiveFourthLevel] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -409,13 +410,29 @@ function MainLayout() {
     }
   };
 
-  // 点击四级菜单（最终页面）
+  // 点击四级菜单（父级或最终页面）
   const handleFourthLevelClick = (item) => {
+    if (item.children) {
+      // 有子菜单，显示第 5 级
+      setActiveFourthLevel(item.key);
+    } else if (item.key.startsWith('/')) {
+      // 最终页面
+      navigate(item.key);
+      setActiveFirstLevel(null);
+      setActiveSecondLevel(null);
+      setActiveThirdLevel(null);
+      setActiveFourthLevel(null);
+    }
+  };
+
+  // 点击五级菜单（最终页面）
+  const handleFifthLevelClick = (item) => {
     if (item.key.startsWith('/')) {
       navigate(item.key);
       setActiveFirstLevel(null);
       setActiveSecondLevel(null);
       setActiveThirdLevel(null);
+      setActiveFourthLevel(null);
     }
   };
 
@@ -444,6 +461,16 @@ function MainLayout() {
   // 获取第 4 级面板标题
   const fourthLevelTitle = activeThirdLevel
     ? (currentDisplayLevel.find(item => item.key === activeThirdLevel)?.label || '')
+    : '';
+
+  // 获取第 5 级显示的菜单项
+  const currentFifthLevel = activeFourthLevel
+    ? (currentFourthLevel.find(item => item.key === activeFourthLevel)?.children || [])
+    : [];
+
+  // 获取第 5 级面板标题
+  const fifthLevelTitle = activeFourthLevel
+    ? (currentFourthLevel.find(item => item.key === activeFourthLevel)?.label || '')
     : '';
 
   // 获取当前页面标题
@@ -554,8 +581,29 @@ function MainLayout() {
               {currentFourthLevel.map(item => (
                 <div
                   key={item.key}
-                  className={`fourth-level-item ${location.pathname === item.key ? 'active' : ''}`}
+                  className={`fourth-level-item ${activeFourthLevel === item.key ? 'active' : ''}`}
                   onClick={() => handleFourthLevelClick(item)}
+                >
+                  <span className="menu-label">{item.label}</span>
+                  {item.children && <span className="arrow-icon">›</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 五级菜单面板 */}
+        {activeFourthLevel && currentFifthLevel.length > 0 && (
+          <div className="fifth-level-panel">
+            <div className="panel-header">
+              <span>{fifthLevelTitle}</span>
+            </div>
+            <div className="fifth-level-menu">
+              {currentFifthLevel.map(item => (
+                <div
+                  key={item.key}
+                  className={`fifth-level-item ${location.pathname === item.key ? 'active' : ''}`}
+                  onClick={() => handleFifthLevelClick(item)}
                 >
                   <span className="menu-label">{item.label}</span>
                 </div>
