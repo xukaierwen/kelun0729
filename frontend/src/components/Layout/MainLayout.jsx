@@ -46,16 +46,6 @@ const firstLevelMenus = [
     icon: <SettingOutlined />,
     label: '系统管理',
   },
-  {
-    key: 'auth',
-    icon: <UserOutlined />,
-    label: '权限管理',
-  },
-  {
-    key: '/logs/audit',
-    icon: <FileTextOutlined />,
-    label: '日志审计',
-  },
 ];
 
 // 二级菜单配置
@@ -248,10 +238,9 @@ const secondLevelMenus = {
     { key: '/system/params', label: '系统参数' },
     { key: '/system/workflow', label: '审批流程' },
     { key: '/system/dictionary', label: '字典管理' },
-  ],
-  auth: [
     { key: '/auth/roles', label: '角色管理' },
     { key: '/auth/permissions', label: '权限分配' },
+    { key: '/logs/audit', label: '日志审计' },
   ],
 };
 
