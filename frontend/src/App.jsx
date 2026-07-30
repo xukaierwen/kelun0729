@@ -104,7 +104,45 @@ function App() {
             <Route path="budget/actual-sales-summary" element={<SalesActualSummary />} />
             <Route path="budget/actual-expense-output" element={<PlaceholderPage title="运营费用输出表" />} />
             <Route path="budget/actual-cost-assessment" element={<PlaceholderPage title="成本实际数-考核成本" />} />
-            <Route path="budget/annual" element={<OperationBudget />} />
+            <Route path="budget/annual/target-compile" element={<PlaceholderPage title="总部目标编制" />} />
+            <Route path="budget/annual/target-review" element={<PlaceholderPage title="总部目标审核" />} />
+            <Route path="budget/annual/import-point" element={<PlaceholderPage title="总部点位导入" />} />
+            <Route path="budget/annual/import-point-price" element={<PlaceholderPage title="点位费单价导入" />} />
+            <Route path="budget/annual/overview" element={<PlaceholderPage title="编制总览" />} />
+            <Route path="budget/annual/sales-digital" element={<PlaceholderPage title="数字营销&城市连锁" />} />
+            <Route path="budget/annual/sales-direct" element={<PlaceholderPage title="费用制片区-片区直营" />} />
+            <Route path="budget/annual/sales-investment" element={<PlaceholderPage title="费用制片区-片区招商" />} />
+            <Route path="budget/annual/sales-chain" element={<PlaceholderPage title="费用制片区-片区城市连锁" />} />
+            <Route path="budget/annual/sales-agent" element={<PlaceholderPage title="代理制片区&总代" />} />
+            <Route path="budget/annual/sales-hq" element={<PlaceholderPage title="总部直营" />} />
+            <Route path="budget/annual/sales-review" element={<PlaceholderPage title="销售预算校验审核" />} />
+            <Route path="budget/annual/expense-check" element={<PlaceholderPage title="运营费用校验表" />} />
+            <Route path="budget/annual/expense-dept" element={<PlaceholderPage title="部门费用 - 输入表" />} />
+            <Route path="budget/annual/expense-market" element={<PlaceholderPage title="市场费用 - 输入表" />} />
+            <Route path="budget/annual/expense-salary-count" element={<PlaceholderPage title="薪酬人数输入表" />} />
+            <Route path="budget/annual/expense-salary-amount" element={<PlaceholderPage title="薪酬金额输入表" />} />
+            <Route path="budget/annual/expense-academic" element={<PlaceholderPage title="学术推广费用输入表" />} />
+            <Route path="budget/annual/expense-academic-split" element={<PlaceholderPage title="学术项目拆分" />} />
+            <Route path="budget/annual/expense-hospital-project" element={<PlaceholderPage title="医院项目 - 项目类输入表" />} />
+            <Route path="budget/annual/expense-hospital-donate" element={<PlaceholderPage title="医院项目 - 捐赠类输入表" />} />
+            <Route path="budget/annual/expense-formal-project" element={<PlaceholderPage title="正式工程输入表" />} />
+            <Route path="budget/annual/expense-minor-project" element={<PlaceholderPage title="零星工程输入表" />} />
+            <Route path="budget/annual/expense-fixed-depreciation" element={<PlaceholderPage title="固定资产折旧年限残值率" />} />
+            <Route path="budget/annual/expense-fixed-current" element={<PlaceholderPage title="已有固定资产当期折旧" />} />
+            <Route path="budget/annual/expense-fixed-new" element={<PlaceholderPage title="新购固定资产价值 - 含税" />} />
+            <Route path="budget/annual/expense-fixed-payment" element={<PlaceholderPage title="固定资产付款金额 - 输入表" />} />
+            <Route path="budget/annual/expense-fixed-transfer" element={<PlaceholderPage title="工程项目转固输入表" />} />
+            <Route path="budget/annual/expense-fixed-cleanup" element={<PlaceholderPage title="预计清理折旧输入表" />} />
+            <Route path="budget/annual/expense-intangible-amortization" element={<PlaceholderPage title="无形资产摊销年限输入表" />} />
+            <Route path="budget/annual/expense-intangible-current" element={<PlaceholderPage title="已有无形资产当期摊销" />} />
+            <Route path="budget/annual/expense-intangible-payment" element={<PlaceholderPage title="无形资产付款金额 - 输入表" />} />
+            <Route path="budget/annual/expense-intangible-transfer" element={<PlaceholderPage title="工程项目转无形资产输入表" />} />
+            <Route path="budget/annual/expense-intangible-cleanup" element={<PlaceholderPage title="预计清理摊销输入表" />} />
+            <Route path="budget/annual/expense-output" element={<PlaceholderPage title="运营费用输出表" />} />
+            <Route path="budget/annual/expense-review" element={<PlaceholderPage title="运营费用审核" />} />
+            <Route path="budget/annual/cost-budget" element={<PlaceholderPage title="成本预算" />} />
+            <Route path="budget/annual/profit-table" element={<PlaceholderPage title="毛利表" />} />
+            <Route path="budget/annual/annual-review" element={<PlaceholderPage title="年度预算审核" />} />
             <Route path="budget/planned-complete-digital" element={<PlannedCompleteTable pageTitle="数字营销&城市连锁" />} />
             <Route path="budget/planned-complete-direct" element={<PlannedCompleteTable pageTitle="费用制片区-片区直营" />} />
             <Route path="budget/planned-complete-investment" element={<PlannedCompleteTable pageTitle="费用制片区-片区招商" />} />
