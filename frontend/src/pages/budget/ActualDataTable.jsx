@@ -31,8 +31,6 @@ const FIXED_METRICS = [
 
 // 维度字段（固定左侧）
 const DIMENSION_FIELDS = [
-  { key: 'year', title: '年', width: 60 },
-  { key: 'month', title: '月', width: 60 },
   { key: 'product_owner', title: '产品负责人（总部）', width: 120 },
   { key: 'salesman_hq', title: '一级业务员（总部）', width: 120 },
   { key: 'sales_office', title: '销售办公室', width: 120 },
