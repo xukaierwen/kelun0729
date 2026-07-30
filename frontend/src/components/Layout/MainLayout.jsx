@@ -273,21 +273,35 @@ function MainLayout() {
     }
   };
 
-  // 点击三级菜单（最终页面）
-  const handleThirdLevelClick = (key) => {
-    navigate(key);
-    // 自动收起菜单面板
-    setActiveFirstLevel(null);
-    setActiveSecondLevel(null);
+  // 点击三级菜单（最终页面或父级）
+  const handleThirdLevelClick = (item) => {
+    if (item.children) {
+      // 有子菜单，显示子菜单
+      setActiveSecondLevel(item.key);
+    } else {
+      // 最终页面
+      navigate(item.key);
+      setActiveFirstLevel(null);
+      setActiveSecondLevel(null);
+    }
   };
 
   // 获取当前一级菜单的二级菜单
   const currentSecondLevel = activeFirstLevel ? secondLevelMenus[activeFirstLevel] || [] : [];
   
-  // 获取当前二级菜单的三级菜单
-  const currentThirdLevel = activeSecondLevel 
-    ? currentSecondLevel.find(item => item.key === activeSecondLevel)?.children || []
+  // 获取当前显示的菜单项（可能是二级或三级）
+  const currentDisplayLevel = activeSecondLevel 
+    ? (currentSecondLevel.find(item => item.key === activeSecondLevel)?.children || 
+       currentSecondLevel.flatMap(item => item.children || []).find(c => c.key === activeSecondLevel)?.children ||
+       [])
     : [];
+
+  // 获取当前面板标题
+  const currentPanelTitle = activeSecondLevel
+    ? (currentSecondLevel.find(item => item.key === activeSecondLevel)?.label ||
+       currentSecondLevel.flatMap(item => item.children || []).find(c => c.key === activeSecondLevel)?.label ||
+       '')
+    : '';
 
   // 获取当前页面标题
   const currentTitle = pageTitleMap[location.pathname] || '页面';
@@ -367,19 +381,20 @@ function MainLayout() {
         )}
 
         {/* 三级菜单面板 */}
-        {activeSecondLevel && currentThirdLevel.length > 0 && (
+        {activeSecondLevel && currentDisplayLevel.length > 0 && (
           <div className="third-level-panel">
             <div className="panel-header">
-              <span>{currentSecondLevel.find(m => m.key === activeSecondLevel)?.label}</span>
+              <span>{currentPanelTitle}</span>
             </div>
             <div className="third-level-menu">
-              {currentThirdLevel.map(item => (
+              {currentDisplayLevel.map(item => (
                 <div
                   key={item.key}
                   className={`third-level-item ${location.pathname === item.key ? 'active' : ''}`}
-                  onClick={() => handleThirdLevelClick(item.key)}
+                  onClick={() => handleThirdLevelClick(item)}
                 >
                   <span className="menu-label">{item.label}</span>
+                  {item.children && <span className="arrow-icon">›</span>}
                 </div>
               ))}
             </div>
