@@ -16,6 +16,9 @@ import SalesActualSummary from './pages/budget/SalesActualSummary';
 import ActualDataTable from './pages/budget/ActualDataTable';
 import PlannedCompleteTable from './pages/budget/PlannedCompleteTable';
 import PlannedCompleteReview from './pages/budget/PlannedCompleteReview';
+import TargetCompileTable from './pages/budget/TargetCompileTable';
+import TargetReviewTable from './pages/budget/TargetReviewTable';
+import OverviewTable from './pages/budget/OverviewTable';
 import PlaceholderPage from './components/PlaceholderPage';
 
 import './App.css';
@@ -104,11 +107,11 @@ function App() {
             <Route path="budget/actual-sales-summary" element={<SalesActualSummary />} />
             <Route path="budget/actual-expense-output" element={<PlaceholderPage title="运营费用输出表" />} />
             <Route path="budget/actual-cost-assessment" element={<PlaceholderPage title="成本实际数-考核成本" />} />
-            <Route path="budget/annual/target-compile" element={<PlaceholderPage title="总部目标编制" />} />
-            <Route path="budget/annual/target-review" element={<PlaceholderPage title="总部目标审核" />} />
+            <Route path="budget/annual/target-compile" element={<TargetCompileTable />} />
+            <Route path="budget/annual/target-review" element={<TargetReviewTable />} />
             <Route path="budget/annual/import-point" element={<PlaceholderPage title="总部点位导入" />} />
             <Route path="budget/annual/import-point-price" element={<PlaceholderPage title="点位费单价导入" />} />
-            <Route path="budget/annual/overview" element={<PlaceholderPage title="编制总览" />} />
+            <Route path="budget/annual/overview" element={<OverviewTable />} />
             <Route path="budget/annual/sales-digital" element={<PlaceholderPage title="数字营销&城市连锁" />} />
             <Route path="budget/annual/sales-direct" element={<PlaceholderPage title="费用制片区-片区直营" />} />
             <Route path="budget/annual/sales-investment" element={<PlaceholderPage title="费用制片区-片区招商" />} />
