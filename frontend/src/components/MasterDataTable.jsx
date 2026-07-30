@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   Table, Button, Space, Modal, Form, Input, Select, Popconfirm,
-  message, Tag, DatePicker, Checkbox, Dropdown,
+  message, Tag, DatePicker, Dropdown, Row, Col,
 } from 'antd'
 import {
-  PlusOutlined, EditOutlined, StopOutlined, SearchOutlined,
-  ReloadOutlined, CopyOutlined, DownOutlined, ThunderboltOutlined,
+  PlusOutlined, DownOutlined, SearchOutlined,
+  ReloadOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import './MasterDataTable.css'
@@ -24,39 +24,46 @@ export default function MasterDataTable({
   rowKey = 'id',
 }) {
   const [data, setData] = useState(dataSource)
-  const [searchText, setSearchText] = useState('')
-  const [exactMatch, setExactMatch] = useState(false)
-  const [filterField, setFilterField] = useState('')
+  const [searchValues, setSearchValues] = useState({})
   const [modalOpen, setModalOpen] = useState(false)
   const [editingRecord, setEditingRecord] = useState(null)
   const [form] = Form.useForm()
+  const [searchForm] = Form.useForm()
 
   useEffect(() => {
     setData(dataSource)
   }, [dataSource])
 
-  // 搜索过滤
-  const filteredData = useMemo(() => {
-    if (!searchText) return data
-    if (exactMatch && filterField) {
-      return data.filter(record =>
-        String(record[filterField] || '').includes(searchText)
-      )
-    }
-    return data.filter(record =>
-      Object.values(record).some(val =>
-        String(val).toLowerCase().includes(searchText.toLowerCase())
-      )
-    )
-  }, [data, searchText, exactMatch, filterField])
-
-  // 可搜索的字段列表
-  const searchableFields = useMemo(() =>
+  // 可查询的字段（排除序号，取前6个）
+  const queryFields = useMemo(() =>
     columns
-      .filter(c => c.dataIndex && c.dataIndex !== 'seq' && c.dataIndex !== 'is_valid')
-      .map(c => ({ label: c.title, value: c.dataIndex })),
+      .filter(c => c.dataIndex && c.dataIndex !== 'seq')
+      .slice(0, 6),
     [columns]
   )
+
+  // 搜索过滤
+  const filteredData = useMemo(() => {
+    const values = Object.entries(searchValues).filter(([, v]) => v !== undefined && v !== '')
+    if (values.length === 0) return data
+    return data.filter(record =>
+      values.every(([key, val]) =>
+        String(record[key] || '').toLowerCase().includes(String(val).toLowerCase())
+      )
+    )
+  }, [data, searchValues])
+
+  // 查询
+  const handleSearch = () => {
+    const values = searchForm.getFieldsValue()
+    setSearchValues(values)
+  }
+
+  // 重置
+  const handleReset = () => {
+    searchForm.resetFields()
+    setSearchValues({})
+  }
 
   // 打开新增模态框
   const handleAdd = () => {
@@ -171,64 +178,65 @@ export default function MasterDataTable({
 
   return (
     <div className="master-data-table">
-      {/* 工具栏 */}
-      <div className="table-toolbar">
-        {/* 左侧：查询条件区 */}
-        <div className="toolbar-filter">
-          <Select
-            placeholder="选择查询字段"
-            value={filterField || undefined}
-            onChange={(val) => setFilterField(val || '')}
-            allowClear
-            style={{ width: 140 }}
-            options={searchableFields}
-            className="filter-select"
-          />
-          <Input
-            placeholder="搜索关键字"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            allowClear
-            style={{ width: 220 }}
-            onPressEnter={() => {}}
-            className="filter-input"
-          />
-          <div
-            className={`exact-match-tag ${exactMatch ? 'active' : ''}`}
-            onClick={() => setExactMatch(!exactMatch)}
-          >
-            <Checkbox checked={exactMatch} style={{ marginRight: 4 }} />
-            <span>精确匹配</span>
-          </div>
-          <Button type="primary" icon={<SearchOutlined />}>
-            查询
-          </Button>
-          <Button
-            type="primary"
-            ghost
-            icon={<ThunderboltOutlined />}
-            title="快速搜索"
-          />
-        </div>
+      {/* 查询条件区 */}
+      {allowSearch && (
+        <div className="search-form">
+          <Row gutter={16} align="middle" wrap={false}>
+            {/* 左侧：查询字段 */}
+            <Col flex="1">
+              <Form form={searchForm} layout="inline" className="search-fields">
+                {queryFields.map(field => {
+                  const fieldName = field.dataIndex || field.key
+                  return (
+                    <Form.Item key={fieldName} label={field.title} name={fieldName} className="search-field-item">
+                      {field.inputType === 'select' ? (
+                        <Select
+                          placeholder={`请选择${field.title}`}
+                          options={field.options}
+                          allowClear
+                          style={{ width: '100%' }}
+                          size="small"
+                        />
+                      ) : field.inputType === 'date' ? (
+                        <DatePicker
+                          placeholder={`请选择${field.title}`}
+                          style={{ width: '100%' }}
+                          format="YYYY-MM-DD"
+                          size="small"
+                        />
+                      ) : (
+                        <Input
+                          placeholder={`请输入${field.title}`}
+                          allowClear
+                          size="small"
+                        />
+                      )}
+                    </Form.Item>
+                  )
+                })}
+              </Form>
+            </Col>
 
-        {/* 右侧：功能按钮区 */}
-        <div className="toolbar-actions">
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-            新建
-          </Button>
-          <Button icon={<CopyOutlined />} onClick={() => message.info('复制功能开发中')}>
-            复制
-          </Button>
-          <Button icon={<ReloadOutlined />} onClick={onRefresh} loading={loading}>
-            刷新
-          </Button>
-          <Dropdown menu={{ items: moreMenuItems, onClick: handleMoreClick }} trigger={['click']}>
-            <Button>
-              更多 <DownOutlined />
-            </Button>
-          </Dropdown>
+            {/* 右侧：按钮区 */}
+            <Col flex="none" className="search-buttons">
+              <Dropdown menu={{ items: moreMenuItems, onClick: handleMoreClick }} trigger={['click']}>
+                <Button size="small">
+                  更多 <DownOutlined />
+                </Button>
+              </Dropdown>
+              <Button size="small" onClick={handleAdd} icon={<PlusOutlined />}>
+                新增
+              </Button>
+              <Button size="small" onClick={handleReset}>
+                重置
+              </Button>
+              <Button type="primary" size="small" icon={<SearchOutlined />} onClick={handleSearch}>
+                查询
+              </Button>
+            </Col>
+          </Row>
         </div>
-      </div>
+      )}
 
       {/* 数据表格 */}
       <Table
@@ -240,9 +248,10 @@ export default function MasterDataTable({
           pageSize: 10,
           showTotal: (total) => `共 ${total} 条`,
           showSizeChanger: true,
+          size: 'small',
         }}
         scroll={{ x: 800 }}
-        size="middle"
+        size="small"
       />
 
       {/* 编辑模态框 */}
