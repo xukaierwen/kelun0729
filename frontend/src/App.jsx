@@ -19,6 +19,7 @@ import PlannedCompleteReview from './pages/budget/PlannedCompleteReview';
 import TargetCompileTable from './pages/budget/TargetCompileTable';
 import TargetReviewTable from './pages/budget/TargetReviewTable';
 import OverviewTable from './pages/budget/OverviewTable';
+import SalesBudgetTable from './pages/budget/SalesBudgetTable';
 import PlaceholderPage from './components/PlaceholderPage';
 
 import './App.css';
@@ -112,12 +113,12 @@ function App() {
             <Route path="budget/annual/import-point" element={<PlaceholderPage title="总部点位导入" />} />
             <Route path="budget/annual/import-point-price" element={<PlaceholderPage title="点位费单价导入" />} />
             <Route path="budget/annual/overview" element={<OverviewTable />} />
-            <Route path="budget/annual/sales-digital" element={<PlaceholderPage title="数字营销&城市连锁" />} />
-            <Route path="budget/annual/sales-direct" element={<PlaceholderPage title="费用制片区-片区直营" />} />
-            <Route path="budget/annual/sales-investment" element={<PlaceholderPage title="费用制片区-片区招商" />} />
-            <Route path="budget/annual/sales-chain" element={<PlaceholderPage title="费用制片区-片区城市连锁" />} />
-            <Route path="budget/annual/sales-agent" element={<PlaceholderPage title="代理制片区&总代" />} />
-            <Route path="budget/annual/sales-hq" element={<PlaceholderPage title="总部直营" />} />
+            <Route path="budget/annual/sales-digital" element={<SalesBudgetTable pageTitle="数字营销&城市连锁" />} />
+            <Route path="budget/annual/sales-direct" element={<SalesBudgetTable pageTitle="费用制片区-片区直营" />} />
+            <Route path="budget/annual/sales-investment" element={<SalesBudgetTable pageTitle="费用制片区-片区招商" />} />
+            <Route path="budget/annual/sales-chain" element={<SalesBudgetTable pageTitle="费用制片区-片区城市连锁" />} />
+            <Route path="budget/annual/sales-agent" element={<SalesBudgetTable pageTitle="代理制片区&总代" />} />
+            <Route path="budget/annual/sales-hq" element={<SalesBudgetTable pageTitle="总部直营" />} />
             <Route path="budget/annual/sales-review" element={<PlaceholderPage title="销售预算校验审核" />} />
             <Route path="budget/annual/expense-check" element={<PlaceholderPage title="运营费用校验表" />} />
             <Route path="budget/annual/expense-dept" element={<PlaceholderPage title="部门费用 - 输入表" />} />
