@@ -34,10 +34,10 @@ export default function MasterDataTable({
     setData(dataSource)
   }, [dataSource])
 
-  // 可查询的字段（排除序号，取前6个）
+  // 可查询的字段（排除序号和日期字段，取前6个）
   const queryFields = useMemo(() =>
     columns
-      .filter(c => c.dataIndex && c.dataIndex !== 'seq')
+      .filter(c => c.dataIndex && c.dataIndex !== 'seq' && c.inputType !== 'date')
       .slice(0, 6),
     [columns]
   )
