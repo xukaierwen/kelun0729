@@ -160,21 +160,23 @@ export default function ActualDataTable({ pageTitle }) {
       </div>
 
       {/* 数据表格 */}
-      <Table
-        columns={columns}
-        dataSource={[]}
-        rowKey="id"
-        loading={loading}
-        pagination={{
-          pageSize: 20,
-          showTotal: (total) => `共 ${total} 条`,
-          showSizeChanger: true,
-          size: 'small',
-        }}
-        scroll={{ x: 3000, y: 500 }}
-        size="small"
-        bordered
-      />
+      <div className="table-container">
+        <Table
+          columns={columns}
+          dataSource={[]}
+          rowKey="id"
+          loading={loading}
+          pagination={{
+            pageSize: 20,
+            showTotal: (total) => `共 ${total} 条`,
+            showSizeChanger: true,
+            size: 'small',
+          }}
+          scroll={{ x: 'max-content' }}
+          size="small"
+          bordered
+        />
+      </div>
     </div>
   )
 }

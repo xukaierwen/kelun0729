@@ -7,8 +7,14 @@
 }
 
 /* 表格容器 */
-.actual-data-table .ant-table-wrapper {
+.actual-data-table .table-container {
+  width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.actual-data-table .ant-table-wrapper {
+  min-width: 100%;
 }
 
 /* 查询条件区 */
