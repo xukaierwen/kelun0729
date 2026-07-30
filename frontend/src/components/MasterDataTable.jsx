@@ -1,13 +1,14 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
   Table, Button, Space, Modal, Form, Input, Select, Popconfirm,
-  Card, message, Tag, DatePicker,
+  message, Tag, DatePicker, Checkbox, Dropdown,
 } from 'antd'
 import {
   PlusOutlined, EditOutlined, StopOutlined, SearchOutlined,
-  ReloadOutlined, ExportOutlined, ImportOutlined,
+  ReloadOutlined, CopyOutlined, DownOutlined, ThunderboltOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
+import './MasterDataTable.css'
 
 export default function MasterDataTable({
   tableName,
@@ -24,6 +25,8 @@ export default function MasterDataTable({
 }) {
   const [data, setData] = useState(dataSource)
   const [searchText, setSearchText] = useState('')
+  const [exactMatch, setExactMatch] = useState(false)
+  const [filterField, setFilterField] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [editingRecord, setEditingRecord] = useState(null)
   const [form] = Form.useForm()
@@ -35,12 +38,25 @@ export default function MasterDataTable({
   // 搜索过滤
   const filteredData = useMemo(() => {
     if (!searchText) return data
+    if (exactMatch && filterField) {
+      return data.filter(record =>
+        String(record[filterField] || '').includes(searchText)
+      )
+    }
     return data.filter(record =>
       Object.values(record).some(val =>
         String(val).toLowerCase().includes(searchText.toLowerCase())
       )
     )
-  }, [data, searchText])
+  }, [data, searchText, exactMatch, filterField])
+
+  // 可搜索的字段列表
+  const searchableFields = useMemo(() =>
+    columns
+      .filter(c => c.dataIndex && c.dataIndex !== 'seq' && c.dataIndex !== 'is_valid')
+      .map(c => ({ label: c.title, value: c.dataIndex })),
+    [columns]
+  )
 
   // 打开新增模态框
   const handleAdd = () => {
@@ -59,8 +75,7 @@ export default function MasterDataTable({
   // 提交表单
   const handleSave = async () => {
     const values = await form.validateFields()
-    
-    // 处理日期字段，将 dayjs 对象转换为字符串
+
     const processedValues = { ...values }
     columns.forEach(col => {
       if (col.inputType === 'date' && processedValues[col.dataIndex || col.key]) {
@@ -70,7 +85,7 @@ export default function MasterDataTable({
         }
       }
     })
-    
+
     const record = {
       ...processedValues,
       id: editingRecord?.id || `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
@@ -138,40 +153,81 @@ export default function MasterDataTable({
     },
   ]
 
+  // 更多操作菜单
+  const moreMenuItems = [
+    { key: 'refresh', label: '刷新', icon: <ReloadOutlined /> },
+    ...(allowImportExport ? [
+      { key: 'import', label: '导入' },
+      { key: 'export', label: '导出' },
+    ] : []),
+  ]
+
+  const handleMoreClick = ({ key }) => {
+    if (key === 'refresh') onRefresh()
+  }
+
   return (
-    <Card
-      title={`${tableName}管理`}
-      extra={
-        <Space>
-          {allowSearch && (
-            <Input.Search
-              placeholder="搜索..."
-              prefix={<SearchOutlined />}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              style={{ width: 200 }}
-              allowClear
-            />
-          )}
+    <div className="master-data-table">
+      {/* 工具栏 */}
+      <div className="table-toolbar">
+        {/* 左侧：查询条件区 */}
+        <div className="toolbar-filter">
+          <Select
+            placeholder="选择查询字段"
+            value={filterField || undefined}
+            onChange={(val) => setFilterField(val || '')}
+            allowClear
+            style={{ width: 140 }}
+            options={searchableFields}
+            className="filter-select"
+          />
+          <Input
+            placeholder="搜索关键字"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            allowClear
+            style={{ width: 220 }}
+            onPressEnter={() => {}}
+            className="filter-input"
+          />
+          <div
+            className={`exact-match-tag ${exactMatch ? 'active' : ''}`}
+            onClick={() => setExactMatch(!exactMatch)}
+          >
+            <Checkbox checked={exactMatch} style={{ marginRight: 4 }} />
+            <span>精确匹配</span>
+          </div>
+          <Button type="primary" icon={<SearchOutlined />}>
+            查询
+          </Button>
+          <Button
+            type="primary"
+            ghost
+            icon={<ThunderboltOutlined />}
+            title="快速搜索"
+          />
+        </div>
+
+        {/* 右侧：功能按钮区 */}
+        <div className="toolbar-actions">
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+            新建
+          </Button>
+          <Button icon={<CopyOutlined />} onClick={() => message.info('复制功能开发中')}>
+            复制
+          </Button>
           <Button icon={<ReloadOutlined />} onClick={onRefresh} loading={loading}>
             刷新
           </Button>
-          {allowImportExport && (
-            <>
-              <Button icon={<ImportOutlined />}>导入</Button>
-              <Button icon={<ExportOutlined />}>导出</Button>
-            </>
-          )}
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAdd}
-          >
-            新增
-          </Button>
-        </Space>
-      }
-    >
+          <Dropdown menu={{ items: moreMenuItems, onClick: handleMoreClick }} trigger={['click']}>
+            <Button>
+              更多 <DownOutlined />
+            </Button>
+          </Dropdown>
+        </div>
+      </div>
+
+      {/* 数据表格 */}
       <Table
         columns={tableColumns}
         dataSource={filteredData}
@@ -183,6 +239,7 @@ export default function MasterDataTable({
           showSizeChanger: true,
         }}
         scroll={{ x: 800 }}
+        size="middle"
       />
 
       {/* 编辑模态框 */}
@@ -202,7 +259,6 @@ export default function MasterDataTable({
           {columns.map(col => {
             const fieldName = col.dataIndex || col.key
 
-            // 处理日期字段的初始值
             let initialValue = undefined
             if (col.inputType === 'date' && editingRecord?.[fieldName]) {
               initialValue = dayjs(editingRecord[fieldName])
@@ -242,6 +298,6 @@ export default function MasterDataTable({
           })}
         </Form>
       </Modal>
-    </Card>
+    </div>
   )
 }
