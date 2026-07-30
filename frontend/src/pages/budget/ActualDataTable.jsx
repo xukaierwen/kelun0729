@@ -82,16 +82,17 @@ export default function ActualDataTable({ pageTitle }) {
       })
     })
 
-    // 按月份展开的指标列
+    // 按月份展开的指标列（使用父子表头）
     MONTHLY_METRICS.forEach(metric => {
-      MONTHS.forEach(month => {
-        cols.push({
-          title: `${metric}-${month}`,
+      cols.push({
+        title: metric,
+        children: MONTHS.map(month => ({
+          title: month,
           dataIndex: `${metric}_${month.replace('月', '')}`,
           key: `${metric}_${month.replace('月', '')}`,
-          width: 100,
+          width: 80,
           align: 'right',
-        })
+        })),
       })
     })
 
@@ -170,7 +171,7 @@ export default function ActualDataTable({ pageTitle }) {
             showSizeChanger: true,
             size: 'small',
           }}
-          scroll={{ x: 16000 }}
+          scroll={{ x: 14000 }}
           size="small"
           bordered
           locale={{
