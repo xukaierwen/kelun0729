@@ -124,16 +124,18 @@ export default function MasterDataTable({
     {
       title: '操作',
       key: 'action',
-      width: 120,
+      width: 100,
       fixed: 'right',
+      align: 'center',
       render: (_, record) => (
         <Space size="small">
           <Button
             type="link"
             size="small"
-            icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
-          />
+          >
+            编辑
+          </Button>
           <Popconfirm
             title="确认失效？"
             description="将此记录状态改为禁用"
@@ -145,8 +147,9 @@ export default function MasterDataTable({
               type="link"
               size="small"
               danger
-              icon={<StopOutlined />}
-            />
+            >
+              失效
+            </Button>
           </Popconfirm>
         </Space>
       ),

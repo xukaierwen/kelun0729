@@ -1,22 +1,21 @@
-/* MasterDataTable 工具栏样式 - 仿 HZERO 风格 */
+/* MasterDataTable 样式 - 仿 HZERO 表格风格 */
 
 .master-data-table {
   background: white;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
-/* 工具栏容器 */
+/* ========== 工具栏 ========== */
 .table-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 10px 16px;
+  border-bottom: 1px solid #e8e8e8;
 }
 
-/* 左侧查询条件区 */
 .toolbar-filter {
   display: flex;
   align-items: center;
@@ -25,31 +24,41 @@
 }
 
 .filter-select .ant-select-selector {
-  border-radius: 4px !important;
+  border-radius: 2px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+}
+
+.filter-select .ant-select-selection-item {
+  line-height: 26px !important;
+  font-size: 13px;
 }
 
 .filter-input.ant-input {
-  border-radius: 4px !important;
+  border-radius: 2px !important;
+  height: 28px !important;
+  font-size: 13px;
 }
 
 /* 精确匹配标签 */
 .exact-match-tag {
   display: flex;
   align-items: center;
-  padding: 4px 12px;
-  border-radius: 4px;
+  padding: 3px 10px;
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   user-select: none;
   transition: all 0.2s;
   border: 1px solid #d9d9d9;
   background: #fafafa;
   color: #666;
+  height: 28px;
 }
 
 .exact-match-tag:hover {
-  border-color: #1677ff;
-  color: #1677ff;
+  border-color: #0840f8;
+  color: #0840f8;
 }
 
 .exact-match-tag.active {
@@ -65,26 +74,147 @@
   gap: 8px;
 }
 
-/* 按钮样式调整 */
 .toolbar-actions .ant-btn {
-  border-radius: 4px;
+  border-radius: 2px;
+  height: 28px;
+  font-size: 13px;
 }
 
-.toolbar-actions .ant-btn-primary {
-  background: #1677ff;
+.toolbar-actions .ant-btn-sm {
+  height: 24px;
+  font-size: 12px;
 }
 
-/* 表格区域 */
-.master-data-table .ant-table {
-  border-radius: 0;
-}
+/* ========== 表格主体 ========== */
 
+/* 表头样式 */
 .master-data-table .ant-table-thead > tr > th {
-  background: #fafafa;
+  background: #f5f5f5;
+  border-bottom: 1px solid #e8e8e8;
+  border-top: 1px solid #e8e8e8;
   font-weight: 600;
+  font-size: 13px;
+  color: #333;
+  padding: 6px 8px !important;
+  height: 36px;
+  line-height: 24px;
 }
 
-/* 响应式 */
+.master-data-table .ant-table-thead > tr > th:first-child {
+  border-left: 1px solid #e8e8e8;
+}
+
+.master-data-table .ant-table-thead > tr > th:last-child {
+  border-right: 1px solid #e8e8e8;
+}
+
+/* 表体样式 */
+.master-data-table .ant-table-tbody > tr > td {
+  padding: 6px 8px !important;
+  font-size: 13px;
+  color: #333;
+  border-bottom: 1px solid #e8e8e8;
+  height: 36px;
+  line-height: 24px;
+  transition: background-color 0.15s;
+}
+
+.master-data-table .ant-table-tbody > tr > td:first-child {
+  border-left: 1px solid #e8e8e8;
+}
+
+.master-data-table .ant-table-tbody > tr > td:last-child {
+  border-right: 1px solid #e8e8e8;
+}
+
+/* 行悬停效果 - 浅蓝高亮 */
+.master-data-table .ant-table-tbody > tr:hover > td {
+  background: #e6ecfe !important;
+}
+
+/* 行选中效果 */
+.master-data-table .ant-table-tbody > tr.ant-table-row-selected > td {
+  background: #e6ecfe !important;
+}
+
+/* 斑马纹（可选） */
+.master-data-table .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-row-selected) > td {
+  background: #e6ecfe;
+}
+
+/* 操作列按钮 */
+.master-data-table .ant-table-tbody .ant-btn-link {
+  padding: 0 4px;
+  height: 24px;
+  font-size: 12px;
+  color: #0840f8;
+}
+
+.master-data-table .ant-table-tbody .ant-btn-link:hover {
+  color: #0840f8;
+  opacity: 0.8;
+}
+
+.master-data-table .ant-table-tbody .ant-btn-link.ant-btn-dangerous {
+  color: #ff4d4f;
+}
+
+/* 序号列居中 */
+.master-data-table .ant-table-thead > tr > th:first-child,
+.master-data-table .ant-table-tbody > tr > td:first-child {
+  text-align: center;
+}
+
+/* 分页器样式 */
+.master-data-table .ant-pagination {
+  padding: 8px 16px;
+  margin: 0;
+  border-top: 1px solid #e8e8e8;
+}
+
+.master-data-table .ant-pagination .ant-pagination-item-active {
+  border-color: #0840f8;
+}
+
+.master-data-table .ant-pagination .ant-pagination-item-active a {
+  color: #0840f8;
+}
+
+/* 空数据 */
+.master-data-table .ant-table-placeholder {
+  border: none;
+}
+
+/* Loading 遮罩 */
+.master-data-table .ant-spin-nested-loading {
+  min-height: 100px;
+}
+
+/* 表格滚动条 */
+.master-data-table .ant-table-body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.master-data-table .ant-table-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.master-data-table .ant-table-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Tag 标签紧凑 */
+.master-data-table .ant-tag {
+  font-size: 12px;
+  padding: 0 6px;
+  height: 20px;
+  line-height: 18px;
+  border-radius: 2px;
+}
+
+/* ========== 响应式 ========== */
 @media (max-width: 900px) {
   .table-toolbar {
     flex-direction: column;
