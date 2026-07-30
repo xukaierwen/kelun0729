@@ -59,14 +59,14 @@ export default function ActualDataTable({ pageTitle }) {
   const columns = useMemo(() => {
     const cols = []
 
-    // 维度字段列
-    DIMENSION_FIELDS.forEach(field => {
+    // 维度字段列（只固定前两个）
+    DIMENSION_FIELDS.forEach((field, index) => {
       cols.push({
         title: field.title,
         dataIndex: field.key,
         key: field.key,
         width: field.width,
-        fixed: 'left',
+        fixed: index < 2 ? 'left' : undefined,
         ellipsis: true,
       })
     })
