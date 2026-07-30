@@ -368,6 +368,7 @@ function MainLayout() {
   const [searchText, setSearchText] = useState('');
   const [activeFirstLevel, setActiveFirstLevel] = useState(null);
   const [activeSecondLevel, setActiveSecondLevel] = useState(null);
+  const [activeThirdLevel, setActiveThirdLevel] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -405,16 +406,27 @@ function MainLayout() {
     }
   };
 
-  // 点击三级菜单（最终页面或父级）
+  // 点击三级菜单（父级或最终页面）
   const handleThirdLevelClick = (item) => {
     if (item.children) {
-      // 有子菜单，显示子菜单
-      setActiveSecondLevel(item.key);
-    } else {
+      // 有子菜单，显示第 4 级
+      setActiveThirdLevel(item.key);
+    } else if (item.key.startsWith('/')) {
       // 最终页面
       navigate(item.key);
       setActiveFirstLevel(null);
       setActiveSecondLevel(null);
+      setActiveThirdLevel(null);
+    }
+  };
+
+  // 点击四级菜单（最终页面）
+  const handleFourthLevelClick = (item) => {
+    if (item.key.startsWith('/')) {
+      navigate(item.key);
+      setActiveFirstLevel(null);
+      setActiveSecondLevel(null);
+      setActiveThirdLevel(null);
     }
   };
 
@@ -433,6 +445,16 @@ function MainLayout() {
     ? (currentSecondLevel.find(item => item.key === activeSecondLevel)?.label ||
        currentSecondLevel.flatMap(item => item.children || []).find(c => c.key === activeSecondLevel)?.label ||
        '')
+    : '';
+
+  // 获取第 4 级显示的菜单项
+  const currentFourthLevel = activeThirdLevel
+    ? (currentDisplayLevel.find(item => item.key === activeThirdLevel)?.children || [])
+    : [];
+
+  // 获取第 4 级面板标题
+  const fourthLevelTitle = activeThirdLevel
+    ? (currentDisplayLevel.find(item => item.key === activeThirdLevel)?.label || '')
     : '';
 
   // 获取当前页面标题
@@ -522,11 +544,31 @@ function MainLayout() {
               {currentDisplayLevel.map(item => (
                 <div
                   key={item.key}
-                  className={`third-level-item ${location.pathname === item.key ? 'active' : ''}`}
+                  className={`third-level-item ${activeThirdLevel === item.key ? 'active' : ''}`}
                   onClick={() => handleThirdLevelClick(item)}
                 >
                   <span className="menu-label">{item.label}</span>
                   {item.children && <span className="arrow-icon">›</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 四级菜单面板 */}
+        {activeThirdLevel && currentFourthLevel.length > 0 && (
+          <div className="fourth-level-panel">
+            <div className="panel-header">
+              <span>{fourthLevelTitle}</span>
+            </div>
+            <div className="fourth-level-menu">
+              {currentFourthLevel.map(item => (
+                <div
+                  key={item.key}
+                  className={`fourth-level-item ${location.pathname === item.key ? 'active' : ''}`}
+                  onClick={() => handleFourthLevelClick(item)}
+                >
+                  <span className="menu-label">{item.label}</span>
                 </div>
               ))}
             </div>
