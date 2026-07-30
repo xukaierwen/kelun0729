@@ -93,7 +93,13 @@ function App() {
             
             {/* 预算管理 */}
             <Route path="budget/actual-sales-digital" element={<DigitalMarketingTable />} />
-            <Route path="budget/actual-sales-summary" element={<SalesActualSummary />} />
+            <Route path="budget/actual-sales-direct" element={<PlaceholderPage title="费用制片区-片区直营" />} />
+            <Route path="budget/actual-sales-investment" element={<PlaceholderPage title="费用制片区-片区招商" />} />
+            <Route path="budget/actual-sales-chain" element={<PlaceholderPage title="费用制片区-片区城市连锁" />} />
+            <Route path="budget/actual-sales-agent" element={<PlaceholderPage title="代理制片区&总代" />} />
+            <Route path="budget/actual-sales-hq" element={<PlaceholderPage title="总部直营" />} />
+            <Route path="budget/actual-expense-output" element={<PlaceholderPage title="运营费用输出表" />} />
+            <Route path="budget/actual-cost-assessment" element={<PlaceholderPage title="成本实际数-考核成本" />} />
             <Route path="budget/actual-before" element={<SalesBudgetV2 />} />
             <Route path="budget/annual" element={<OperationBudget />} />
             <Route path="budget/planned-complete" element={<PlaceholderPage title="预计完成数" />} />
