@@ -130,6 +130,7 @@ const secondLevelMenus = {
             { key: '/budget/actual-sales-chain', label: '费用制片区-片区城市连锁' },
             { key: '/budget/actual-sales-agent', label: '代理制片区&总代' },
             { key: '/budget/actual-sales-hq', label: '总部直营' },
+            { key: '/budget/actual-sales-summary', label: '销售实际数汇总查看' },
           ],
         },
         {
@@ -214,6 +215,7 @@ const pageTitleMap = {
   '/budget/actual-sales-chain': '费用制片区-片区城市连锁',
   '/budget/actual-sales-agent': '代理制片区&总代',
   '/budget/actual-sales-hq': '总部直营',
+  '/budget/actual-sales-summary': '销售实际数汇总查看',
   '/budget/actual-expense-output': '运营费用输出表',
   '/budget/actual-cost-assessment': '成本实际数-考核成本',
   '/budget/actual-before': '实际数调整前',
