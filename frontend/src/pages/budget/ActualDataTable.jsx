@@ -170,9 +170,12 @@ export default function ActualDataTable({ pageTitle }) {
             showSizeChanger: true,
             size: 'small',
           }}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 16000 }}
           size="small"
           bordered
+          locale={{
+            emptyText: '暂无数据',
+          }}
         />
       </div>
     </div>
