@@ -33,9 +33,6 @@ const FIXED_METRICS = [
 const DIMENSION_FIELDS = [
   { key: 'year', title: '年', width: 60 },
   { key: 'month', title: '月', width: 60 },
-  { key: 'manage_type_name', title: '总部管理类型', width: 120 },
-  { key: 'manage_team_name', title: '总部管理团队', width: 120 },
-  { key: 'business_model_name', title: '业务模式', width: 120 },
   { key: 'product_owner', title: '产品负责人（总部）', width: 120 },
   { key: 'salesman_hq', title: '一级业务员（总部）', width: 120 },
   { key: 'sales_office', title: '销售办公室', width: 120 },
@@ -124,9 +121,6 @@ export default function ActualDataTable({ pageTitle }) {
 
   // 查询条件字段
   const queryFields = [
-    { key: 'manage_type', label: '总部管理类型' },
-    { key: 'manage_team', label: '总部管理团队' },
-    { key: 'business_model', label: '业务模式' },
     { key: 'sales_mode', label: '片区销售模式' },
     { key: 'data_scope', label: '数据口径' },
     { key: 'period_type', label: '当期/累计' },
