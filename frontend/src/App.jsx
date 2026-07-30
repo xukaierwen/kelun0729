@@ -13,6 +13,7 @@ import SalesBudgetV2 from './pages/budget/SalesBudgetV2';
 import OperationBudget from './pages/budget/OperationBudget';
 import DigitalMarketingTable from './pages/budget/DigitalMarketingTable';
 import SalesActualSummary from './pages/budget/SalesActualSummary';
+import ActualDataTable from './pages/budget/ActualDataTable';
 import PlaceholderPage from './components/PlaceholderPage';
 
 import './App.css';
@@ -92,12 +93,12 @@ function App() {
             <Route path="dimension/mapping/virtual-product" element={renderMappingPage('map-virtual-product', '虚拟产品映射表')} />
             
             {/* 预算管理 */}
-            <Route path="budget/actual-sales-digital" element={<DigitalMarketingTable />} />
-            <Route path="budget/actual-sales-direct" element={<PlaceholderPage title="费用制片区-片区直营" />} />
-            <Route path="budget/actual-sales-investment" element={<PlaceholderPage title="费用制片区-片区招商" />} />
-            <Route path="budget/actual-sales-chain" element={<PlaceholderPage title="费用制片区-片区城市连锁" />} />
-            <Route path="budget/actual-sales-agent" element={<PlaceholderPage title="代理制片区&总代" />} />
-            <Route path="budget/actual-sales-hq" element={<PlaceholderPage title="总部直营" />} />
+            <Route path="budget/actual-sales-digital" element={<ActualDataTable pageTitle="数字营销&城市连锁" />} />
+            <Route path="budget/actual-sales-direct" element={<ActualDataTable pageTitle="费用制片区-片区直营" />} />
+            <Route path="budget/actual-sales-investment" element={<ActualDataTable pageTitle="费用制片区-片区招商" />} />
+            <Route path="budget/actual-sales-chain" element={<ActualDataTable pageTitle="费用制片区-片区城市连锁" />} />
+            <Route path="budget/actual-sales-agent" element={<ActualDataTable pageTitle="代理制片区&总代" />} />
+            <Route path="budget/actual-sales-hq" element={<ActualDataTable pageTitle="总部直营" />} />
             <Route path="budget/actual-expense-output" element={<PlaceholderPage title="运营费用输出表" />} />
             <Route path="budget/actual-cost-assessment" element={<PlaceholderPage title="成本实际数-考核成本" />} />
             <Route path="budget/actual-before" element={<SalesBudgetV2 />} />

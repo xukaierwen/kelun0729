@@ -1,0 +1,121 @@
+/* ActualDataTable 样式 */
+
+.actual-data-table {
+  background: white;
+  border-radius: 2px;
+}
+
+/* 查询条件区 */
+.actual-data-table .search-form {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fafafa;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.actual-data-table .search-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  flex: 1;
+}
+
+.actual-data-table .search-field-item {
+  width: 180px;
+  margin-right: 12px !important;
+  margin-bottom: 8px !important;
+  margin-left: 0 !important;
+}
+
+.actual-data-table .search-field-item .ant-form-item-label {
+  min-width: 80px;
+  text-align: right;
+  font-size: 13px;
+  color: #333;
+  padding-right: 8px;
+}
+
+.actual-data-table .search-field-item .ant-form-item-label > label::after {
+  content: ':';
+  margin: 0 4px 0 2px;
+}
+
+.actual-data-table .search-field-item .ant-select-selector {
+  border-radius: 2px !important;
+  font-size: 13px;
+}
+
+/* 右侧按钮区 */
+.actual-data-table .search-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-bottom: 8px;
+}
+
+.actual-data-table .search-buttons .ant-btn {
+  border-radius: 2px;
+  height: 28px;
+  font-size: 13px;
+}
+
+.actual-data-table .search-buttons .ant-btn-primary {
+  background: #1677ff;
+}
+
+/* 表格样式 */
+.actual-data-table .ant-table {
+  border: 1px solid #e8e8e8;
+  border-top: none;
+}
+
+.actual-data-table .ant-table-thead > tr > th {
+  background: #f5f5f5 !important;
+  border-bottom: 1px solid #e8e8e8 !important;
+  border-right: 1px solid #e8e8e8 !important;
+  font-weight: 600;
+  font-size: 12px;
+  color: #333;
+  padding: 4px 8px !important;
+  height: 32px !important;
+  line-height: 24px !important;
+  white-space: nowrap;
+}
+
+.actual-data-table .ant-table-tbody > tr > td {
+  padding: 4px 8px !important;
+  font-size: 12px;
+  color: #333;
+  border-bottom: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;
+  height: 32px !important;
+  line-height: 24px !important;
+}
+
+.actual-data-table .ant-table-tbody > tr:hover > td {
+  background: #e6ecfe !important;
+}
+
+/* 固定列阴影 */
+.actual-data-table .ant-table-cell-fix-left-last::after,
+.actual-data-table .ant-table-cell-fix-right-first::after {
+  box-shadow: inset 4px 0 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 分页器 */
+.actual-data-table .ant-pagination {
+  padding: 8px 16px;
+  margin: 0;
+  border-top: 1px solid #e8e8e8;
+  background: #fafafa;
+}
+
+/* 响应式 */
+@media (max-width: 1200px) {
+  .actual-data-table .search-field-item {
+    width: 160px;
+  }
+}
