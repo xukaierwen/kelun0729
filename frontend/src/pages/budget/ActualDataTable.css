@@ -3,6 +3,12 @@
 .actual-data-table {
   background: white;
   border-radius: 2px;
+  overflow: auto;
+}
+
+/* 表格容器 */
+.actual-data-table .ant-table-wrapper {
+  overflow-x: auto;
 }
 
 /* 查询条件区 */
@@ -70,6 +76,14 @@
 .actual-data-table .ant-table {
   border: 1px solid #e8e8e8;
   border-top: none;
+}
+
+.actual-data-table .ant-table-container {
+  overflow-x: auto;
+}
+
+.actual-data-table .ant-table-body {
+  overflow-x: auto !important;
 }
 
 .actual-data-table .ant-table-thead > tr > th {
