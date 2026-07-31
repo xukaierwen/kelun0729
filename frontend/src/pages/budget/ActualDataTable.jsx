@@ -118,12 +118,29 @@ export default function ActualDataTable({ pageTitle }) {
     message.success('保存功能开发中')
   }
 
-  // 查询条件字段
-  const queryFields = [
-    { key: 'sales_mode', label: '片区销售模式' },
-    { key: 'data_scope', label: '数据口径' },
-    { key: 'period_type', label: '当期/累计' },
-  ]
+  // 查询条件字段（根据页面标题动态配置）
+  const getQueryFields = () => {
+    const baseFields = [
+      { key: 'year', label: '年份' },
+      { key: 'data_scope', label: '数据口径' },
+      { key: 'period_type', label: '当期/累计' },
+    ]
+
+    // 数字营销&城市连锁、代理制片区&总代：业务模式
+    if (pageTitle === '数字营销&城市连锁' || pageTitle === '代理制片区&总代') {
+      return [
+        { key: 'year', label: '年份' },
+        { key: 'business_model', label: '业务模式' },
+        { key: 'data_scope', label: '数据口径' },
+        { key: 'period_type', label: '当期/累计' },
+      ]
+    }
+
+    // 其他页面：不需要片区销售模式
+    return baseFields
+  }
+
+  const queryFields = getQueryFields()
 
   return (
     <div className="actual-data-table">
