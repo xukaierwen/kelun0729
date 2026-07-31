@@ -3,13 +3,12 @@ import { Table, Button, Space, Select, Form, message } from 'antd'
 import { SearchOutlined, ExportOutlined } from '@ant-design/icons'
 import './ActualDataTable.css'
 
-// 月份列表
-const MONTHS = Array.from({ length: 12 }, (_, i) => `${i + 1}月`)
-
-// 按月份展开的指标
-const MONTHLY_METRICS = [
+// 所有指标（不拆月展示）
+const ALL_METRICS = [
   '销售量',
+  '分析转换系数',
   '销售量 - 转换后',
+  '最小规格转换率',
   '销售量 - 最小规格',
   '中标价/交易价',
   '中标/交易金额',
@@ -17,22 +16,15 @@ const MONTHLY_METRICS = [
   '销售收入 - 含税（折前）',
   '销售收入 - 含税（折扣）',
   '销售收入 - 含税（折后）',
+  '增值税销项税率',
   '销售收入 - 不含税（折前）',
   '销售收入 - 不含税（折扣）',
   '销售收入 - 不含税（折后）',
 ]
 
-// 不按月份展开的指标
-const FIXED_METRICS = [
-  '分析转换系数',
-  '最小规格转换率',
-  '增值税销项税率',
-]
-
 // 维度字段（固定左侧，只固定前两个）
 const DIMENSION_FIELDS = [
   { key: 'year', title: '年', width: 60 },
-  { key: 'month', title: '月', width: 60 },
   { key: 'manage_type', title: '总部管理类型', width: 120 },
   { key: 'manage_team', title: '总部管理团队', width: 120 },
   { key: 'business_model', title: '业务模式', width: 120 },
@@ -76,28 +68,14 @@ export default function SalesActualSummary() {
       })
     })
 
-    // 固定指标列（不按月份展开）
-    FIXED_METRICS.forEach(metric => {
+    // 所有指标列（不拆月）
+    ALL_METRICS.forEach(metric => {
       cols.push({
         title: metric,
         dataIndex: metric,
         key: metric,
         width: 100,
         align: 'right',
-      })
-    })
-
-    // 按月份展开的指标列（使用父子表头）
-    MONTHLY_METRICS.forEach(metric => {
-      cols.push({
-        title: metric,
-        children: MONTHS.map(month => ({
-          title: month,
-          dataIndex: `${metric}_${month.replace('月', '')}`,
-          key: `${metric}_${month.replace('月', '')}`,
-          width: 80,
-          align: 'right',
-        })),
       })
     })
 
@@ -120,6 +98,8 @@ export default function SalesActualSummary() {
 
   // 查询条件字段
   const queryFields = [
+    { key: 'year', label: '年份' },
+    { key: 'month', label: '月份' },
     { key: 'manage_type', label: '总部管理类型' },
     { key: 'manage_team', label: '总部管理团队' },
     { key: 'business_model', label: '业务模式' },
@@ -139,6 +119,12 @@ export default function SalesActualSummary() {
                 <Select placeholder="请选择" allowClear size="small">
                   <Select.Option value="current">当期</Select.Option>
                   <Select.Option value="cumulative">累计</Select.Option>
+                </Select>
+              ) : field.key === 'month' ? (
+                <Select placeholder="请选择" allowClear size="small">
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <Select.Option key={i + 1} value={i + 1}>{i + 1}月</Select.Option>
+                  ))}
                 </Select>
               ) : (
                 <Select placeholder="请选择" allowClear showSearch size="small">
@@ -171,7 +157,7 @@ export default function SalesActualSummary() {
             showSizeChanger: true,
             size: 'small',
           }}
-          scroll={{ x: 14000 }}
+          scroll={{ x: 4000 }}
           size="small"
           bordered
           locale={{
