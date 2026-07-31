@@ -82,17 +82,26 @@ export default function ActualDataTable({ pageTitle }) {
       })
     })
 
-    // 按月份展开的指标列（使用父子表头）
+    // 按月份展开的指标列（使用父子表头，增加全年合计）
     MONTHLY_METRICS.forEach(metric => {
       cols.push({
         title: metric,
-        children: MONTHS.map(month => ({
-          title: month,
-          dataIndex: `${metric}_${month.replace('月', '')}`,
-          key: `${metric}_${month.replace('月', '')}`,
-          width: 80,
-          align: 'right',
-        })),
+        children: [
+          ...MONTHS.map(month => ({
+            title: month,
+            dataIndex: `${metric}_${month.replace('月', '')}`,
+            key: `${metric}_${month.replace('月', '')}`,
+            width: 80,
+            align: 'right',
+          })),
+          {
+            title: '全年合计',
+            dataIndex: `${metric}_total`,
+            key: `${metric}_total`,
+            width: 90,
+            align: 'right',
+          },
+        ],
       })
     })
 
