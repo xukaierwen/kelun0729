@@ -396,6 +396,15 @@ function MainLayout() {
     }
   };
 
+  // 鼠标悬停二级菜单（自动滑出）
+  const handleSecondLevelHover = (item) => {
+    if (item.children) {
+      setActiveSecondLevel(item.key);
+      setActiveThirdLevel(null);
+      setActiveFourthLevel(null);
+    }
+  };
+
   // 点击三级菜单（父级或最终页面）
   const handleThirdLevelClick = (item) => {
     if (item.children) {
@@ -407,6 +416,14 @@ function MainLayout() {
       setActiveFirstLevel(null);
       setActiveSecondLevel(null);
       setActiveThirdLevel(null);
+    }
+  };
+
+  // 鼠标悬停三级菜单（自动滑出）
+  const handleThirdLevelHover = (item) => {
+    if (item.children) {
+      setActiveThirdLevel(item.key);
+      setActiveFourthLevel(null);
     }
   };
 
@@ -422,6 +439,13 @@ function MainLayout() {
       setActiveSecondLevel(null);
       setActiveThirdLevel(null);
       setActiveFourthLevel(null);
+    }
+  };
+
+  // 鼠标悬停四级菜单（自动滑出）
+  const handleFourthLevelHover = (item) => {
+    if (item.children) {
+      setActiveFourthLevel(item.key);
     }
   };
 
@@ -540,6 +564,7 @@ function MainLayout() {
                   key={item.key}
                   className={`second-level-item ${activeSecondLevel === item.key ? 'active' : ''}`}
                   onClick={() => handleSecondLevelClick(item)}
+                  onMouseEnter={() => handleSecondLevelHover(item)}
                 >
                   <span className="menu-icon">{item.icon}</span>
                   <span className="menu-label">{item.label}</span>
@@ -562,6 +587,7 @@ function MainLayout() {
                   key={item.key}
                   className={`third-level-item ${activeThirdLevel === item.key ? 'active' : ''}`}
                   onClick={() => handleThirdLevelClick(item)}
+                  onMouseEnter={() => handleThirdLevelHover(item)}
                 >
                   <span className="menu-label">{item.label}</span>
                   {item.children && <span className="arrow-icon">›</span>}
@@ -583,6 +609,7 @@ function MainLayout() {
                   key={item.key}
                   className={`fourth-level-item ${activeFourthLevel === item.key ? 'active' : ''}`}
                   onClick={() => handleFourthLevelClick(item)}
+                  onMouseEnter={() => handleFourthLevelHover(item)}
                 >
                   <span className="menu-label">{item.label}</span>
                   {item.children && <span className="arrow-icon">›</span>}
