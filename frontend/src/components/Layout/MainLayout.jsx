@@ -383,6 +383,17 @@ function MainLayout() {
     }
   };
 
+  // 鼠标悬停一级菜单（自动滑出）
+  const handleFirstLevelHover = (key) => {
+    if (!key.startsWith('/')) {
+      // 有二级菜单，自动展开
+      setActiveFirstLevel(key);
+      setActiveSecondLevel(null);
+      setActiveThirdLevel(null);
+      setActiveFourthLevel(null);
+    }
+  };
+
   // 点击二级菜单
   const handleSecondLevelClick = (item) => {
     if (item.children) {
@@ -543,6 +554,7 @@ function MainLayout() {
                 key={item.key}
                 className={`first-level-item ${activeFirstLevel === item.key ? 'active' : ''} ${location.pathname === item.key ? 'selected' : ''}`}
                 onClick={() => handleFirstLevelClick(item.key)}
+                onMouseEnter={() => handleFirstLevelHover(item.key)}
               >
                 <span className="menu-icon">{item.icon}</span>
                 <span className="menu-label">{item.label}</span>
