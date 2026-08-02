@@ -7,10 +7,12 @@ import './ActualDataTable.css'
 const MONTHS = Array.from({ length: 12 }, (_, i) => `${i + 1}月`)
 const MONTH_COLUMNS = [...MONTHS, '调整值', '全年合计']
 
-// 按月份展开的指标
+// 按月份展开的指标（固定指标已插入到对应位置）
 const MONTHLY_METRICS = [
   '销售量',
+  '分析转换系数',
   '销售量 - 转换后',
+  '最小规格转换率',
   '销售量 - 最小规格',
   '中标价/交易价',
   '中标/交易金额',
@@ -18,17 +20,14 @@ const MONTHLY_METRICS = [
   '销售收入 - 含税（折前）',
   '销售收入 - 含税（折扣）',
   '销售收入 - 含税（折后）',
+  '增值税销项税率',
   '销售收入 - 不含税（折前）',
   '销售收入 - 不含税（折扣）',
   '销售收入 - 不含税（折后）',
 ]
 
-// 不按月份展开的指标
-const FIXED_METRICS = [
-  '分析转换系数',
-  '最小规格转换率',
-  '增值税销项税率',
-]
+// 不按月份展开的指标（已合并到上面）
+const FIXED_METRICS = []
 
 // 维度字段
 const DIMENSION_FIELDS = [
