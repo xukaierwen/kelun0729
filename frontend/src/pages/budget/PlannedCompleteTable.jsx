@@ -7,27 +7,24 @@ import './ActualDataTable.css'
 const MONTHS = Array.from({ length: 12 }, (_, i) => `${i + 1}月`)
 const MONTH_COLUMNS = [...MONTHS, '调整值', '全年合计']
 
-// 按月份展开的指标（固定指标已插入到对应位置）
-const MONTHLY_METRICS = [
-  '销售量',
-  '分析转换系数',
-  '销售量 - 转换后',
-  '最小规格转换率',
-  '销售量 - 最小规格',
-  '中标价/交易价',
-  '中标/交易金额',
-  '销售单价 - 含税（折前）',
-  '销售收入 - 含税（折前）',
-  '销售收入 - 含税（折扣）',
-  '销售收入 - 含税（折后）',
-  '增值税销项税率',
-  '销售收入 - 不含税（折前）',
-  '销售收入 - 不含税（折扣）',
-  '销售收入 - 不含税（折后）',
+// 指标顺序配置（包含月度指标和固定指标）
+const METRICS_ORDER = [
+  { name: '销售量', type: 'monthly' },
+  { name: '分析转换系数', type: 'fixed' },
+  { name: '销售量 - 转换后', type: 'monthly' },
+  { name: '最小规格转换率', type: 'fixed' },
+  { name: '销售量 - 最小规格', type: 'monthly' },
+  { name: '中标价/交易价', type: 'monthly' },
+  { name: '中标/交易金额', type: 'monthly' },
+  { name: '销售单价 - 含税（折前）', type: 'monthly' },
+  { name: '销售收入 - 含税（折前）', type: 'monthly' },
+  { name: '销售收入 - 含税（折扣）', type: 'monthly' },
+  { name: '销售收入 - 含税（折后）', type: 'monthly' },
+  { name: '增值税销项税率', type: 'fixed' },
+  { name: '销售收入 - 不含税（折前）', type: 'monthly' },
+  { name: '销售收入 - 不含税（折扣）', type: 'monthly' },
+  { name: '销售收入 - 不含税（折后）', type: 'monthly' },
 ]
-
-// 不按月份展开的指标（已合并到上面）
-const FIXED_METRICS = []
 
 // 维度字段
 const DIMENSION_FIELDS = [
@@ -73,29 +70,30 @@ export default function PlannedCompleteTable({ pageTitle }) {
       })
     })
 
-    // 固定指标列（不按月份展开）
-    FIXED_METRICS.forEach(metric => {
-      cols.push({
-        title: metric,
-        dataIndex: metric,
-        key: metric,
-        width: 100,
-        align: 'right',
-      })
-    })
-
-    // 按月份展开的指标列（使用父子表头，包含调整值和全年合计）
-    MONTHLY_METRICS.forEach(metric => {
-      cols.push({
-        title: metric,
-        children: MONTH_COLUMNS.map(month => ({
-          title: month,
-          dataIndex: `${metric}_${month.replace('月', '').replace('全年合计', 'total').replace('调整值', 'adjust')}`,
-          key: `${metric}_${month.replace('月', '').replace('全年合计', 'total').replace('调整值', 'adjust')}`,
-          width: 80,
+    // 指标列（按顺序配置渲染）
+    METRICS_ORDER.forEach(metric => {
+      if (metric.type === 'fixed') {
+        // 固定指标：单列展示
+        cols.push({
+          title: metric.name,
+          dataIndex: metric.name,
+          key: metric.name,
+          width: 100,
           align: 'right',
-        })),
-      })
+        })
+      } else {
+        // 月度指标：按月份展开（包含调整值和全年合计）
+        cols.push({
+          title: metric.name,
+          children: MONTH_COLUMNS.map(month => ({
+            title: month,
+            dataIndex: `${metric.name}_${month.replace('月', '').replace('全年合计', 'total').replace('调整值', 'adjust')}`,
+            key: `${metric.name}_${month.replace('月', '').replace('全年合计', 'total').replace('调整值', 'adjust')}`,
+            width: 80,
+            align: 'right',
+          })),
+        })
+      }
     })
 
     return cols

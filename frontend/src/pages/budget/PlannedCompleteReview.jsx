@@ -6,27 +6,24 @@ import './ActualDataTable.css'
 // 指标拆分列
 const METRIC_COLUMNS = ['累计实际数', '预算调整 6+6 数', '预计完成数', '全年预算执行率', '预计完成执行率']
 
-// 按指标拆分的指标（固定指标已插入到对应位置）
-const SPLIT_METRICS = [
-  '销售量',
-  '分析转换系数',
-  '销售量 - 转换后',
-  '最小规格转换率',
-  '销售量 - 最小规格',
-  '中标价/交易价',
-  '中标/交易金额',
-  '销售单价 - 含税（折前）',
-  '销售收入 - 含税（折前）',
-  '销售收入 - 含税（折扣）',
-  '销售收入 - 含税（折后）',
-  '增值税销项税率',
-  '销售收入 - 不含税（折前）',
-  '销售收入 - 不含税（折扣）',
-  '销售收入 - 不含税（折后）',
+// 指标顺序配置（包含拆分指标和固定指标）
+const METRICS_ORDER = [
+  { name: '销售量', type: 'split' },
+  { name: '分析转换系数', type: 'fixed' },
+  { name: '销售量 - 转换后', type: 'split' },
+  { name: '最小规格转换率', type: 'fixed' },
+  { name: '销售量 - 最小规格', type: 'split' },
+  { name: '中标价/交易价', type: 'split' },
+  { name: '中标/交易金额', type: 'split' },
+  { name: '销售单价 - 含税（折前）', type: 'split' },
+  { name: '销售收入 - 含税（折前）', type: 'split' },
+  { name: '销售收入 - 含税（折扣）', type: 'split' },
+  { name: '销售收入 - 含税（折后）', type: 'split' },
+  { name: '增值税销项税率', type: 'fixed' },
+  { name: '销售收入 - 不含税（折前）', type: 'split' },
+  { name: '销售收入 - 不含税（折扣）', type: 'split' },
+  { name: '销售收入 - 不含税（折后）', type: 'split' },
 ]
-
-// 不按指标拆分的指标（已合并到上面）
-const FIXED_METRICS = []
 
 // 维度字段
 const DIMENSION_FIELDS = [
@@ -76,29 +73,30 @@ export default function PlannedCompleteReview() {
       })
     })
 
-    // 固定指标列（不按指标拆分）
-    FIXED_METRICS.forEach(metric => {
-      cols.push({
-        title: metric,
-        dataIndex: metric,
-        key: metric,
-        width: 100,
-        align: 'right',
-      })
-    })
-
-    // 按指标拆分的指标列（使用父子表头）
-    SPLIT_METRICS.forEach(metric => {
-      cols.push({
-        title: metric,
-        children: METRIC_COLUMNS.map(col => ({
-          title: col,
-          dataIndex: `${metric}_${col.replace(/ /g, '')}`,
-          key: `${metric}_${col.replace(/ /g, '')}`,
+    // 指标列（按顺序配置渲染）
+    METRICS_ORDER.forEach(metric => {
+      if (metric.type === 'fixed') {
+        // 固定指标：单列展示
+        cols.push({
+          title: metric.name,
+          dataIndex: metric.name,
+          key: metric.name,
           width: 100,
           align: 'right',
-        })),
-      })
+        })
+      } else {
+        // 拆分指标：按指标拆分列展示
+        cols.push({
+          title: metric.name,
+          children: METRIC_COLUMNS.map(col => ({
+            title: col,
+            dataIndex: `${metric.name}_${col.replace(/ /g, '')}`,
+            key: `${metric.name}_${col.replace(/ /g, '')}`,
+            width: 100,
+            align: 'right',
+          })),
+        })
+      }
     })
 
     return cols
