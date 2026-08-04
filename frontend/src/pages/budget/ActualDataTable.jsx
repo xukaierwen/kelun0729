@@ -80,24 +80,29 @@ export default function ActualDataTable({ pageTitle }) {
         })
       } else {
         // 月度指标：按月份展开
+        // 中标价/交易价类指标只需按月份拆分，不需要全年合计列
+        const isPriceMetric = metric.name.includes('中标价/交易价')
+        const children = [
+          ...MONTHS.map(month => ({
+            title: month,
+            dataIndex: `${metric.name}_${month.replace('月', '')}`,
+            key: `${metric.name}_${month.replace('月', '')}`,
+            width: 80,
+            align: 'right',
+          })),
+        ]
+        if (!isPriceMetric) {
+          children.push({
+            title: '全年合计',
+            dataIndex: `${metric.name}_total`,
+            key: `${metric.name}_total`,
+            width: 90,
+            align: 'right',
+          })
+        }
         cols.push({
           title: metric.name,
-          children: [
-            ...MONTHS.map(month => ({
-              title: month,
-              dataIndex: `${metric.name}_${month.replace('月', '')}`,
-              key: `${metric.name}_${month.replace('月', '')}`,
-              width: 80,
-              align: 'right',
-            })),
-            {
-              title: '全年合计',
-              dataIndex: `${metric.name}_total`,
-              key: `${metric.name}_total`,
-              width: 90,
-              align: 'right',
-            },
-          ],
+          children,
         })
       }
     })
@@ -159,6 +164,11 @@ export default function ActualDataTable({ pageTitle }) {
                 <Select placeholder="请选择" allowClear size="small">
                   <Select.Option value="current">当期</Select.Option>
                   <Select.Option value="cumulative">累计</Select.Option>
+                </Select>
+              ) : field.key === 'business_model' ? (
+                <Select placeholder="请选择" allowClear size="small">
+                  <Select.Option value="数字营销">数字营销</Select.Option>
+                  <Select.Option value="城市连锁">城市连锁</Select.Option>
                 </Select>
               ) : (
                 <Select placeholder="请选择" allowClear showSearch size="small">

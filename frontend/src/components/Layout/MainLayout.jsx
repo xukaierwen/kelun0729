@@ -106,6 +106,15 @@ const secondLevelMenus = {
   ],
   budget: [
     {
+      key: 'basic-data-import',
+      icon: <FileTextOutlined />,
+      label: '基础数据导入',
+      children: [
+        { key: '/budget/annual/import-point', label: '总部点位导入' },
+        { key: '/budget/annual/import-point-price', label: '点位费单价导入' },
+      ],
+    },
+    {
       key: 'actual-data',
       icon: <LineChartOutlined />,
       label: '实际数',
@@ -170,14 +179,6 @@ const secondLevelMenus = {
           key: 'budget-preparation',
           label: '编制管理',
           children: [
-            {
-              key: 'basic-data-import',
-              label: '基础数据导入',
-              children: [
-                { key: '/budget/annual/import-point', label: '总部点位导入' },
-                { key: '/budget/annual/import-point-price', label: '点位费单价导入' },
-              ],
-            },
             { key: '/budget/annual/overview', label: '编制总览' },
             {
               key: 'sales-budget',

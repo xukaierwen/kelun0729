@@ -27,6 +27,9 @@ const METRICS_ORDER = [
   { name: '销售收入 - 不含税（折后）', type: 'monthly' },
 ]
 
+// 固定指标列（独立于 METRICS_ORDER 的额外固定列，如有需要可在此扩展）
+const FIXED_METRICS = []
+
 // 维度字段
 const DIMENSION_FIELDS = [
   { key: 'year', title: '年', width: 60 },
@@ -100,42 +103,67 @@ export default function SalesBudgetTable({ pageTitle }) {
         })
       } else {
         // 月度指标：复杂结构
+        // 中标价/交易价类指标只需按月份拆分，不需要全年合计列
+        const isPriceMetric = metric.name.includes('中标价/交易价')
+        const children = [
+          // 1-9 月（实际数）
+          ...MONTHS_1_9.map(month => ({
+            title: `${month}(实际数)`,
+            dataIndex: `${metric.name}_${month.replace('月', '')}_actual`,
+            key: `${metric.name}_${month.replace('月', '')}_actual`,
+            width: 90,
+            align: 'right',
+          })),
+          // 10-12 月（预算数）
+          ...MONTHS_10_12.map(month => ({
+            title: `${month}(预算数)`,
+            dataIndex: `${metric.name}_${month.replace('月', '')}_budget`,
+            key: `${metric.name}_${month.replace('月', '')}_budget`,
+            width: 90,
+            align: 'right',
+          })),
+        ]
+        if (!isPriceMetric) {
+          // 12 月调整数
+          children.push({
+            title: '12 月调整数',
+            dataIndex: `${metric.name}_12_adjust`,
+            key: `${metric.name}_12_adjust`,
+            width: 90,
+            align: 'right',
+          })
+          // 当年合计数
+          children.push({
+            title: '当年合计数',
+            dataIndex: `${metric.name}_year_total`,
+            key: `${metric.name}_year_total`,
+            width: 100,
+            align: 'right',
+          })
+        }
+        // 1-12 月（预算数）
+        children.push(
+          ...MONTHS_1_12.map(month => ({
+            title: `${month}(预算数)`,
+            dataIndex: `${metric.name}_${month.replace('月', '')}_budget_full`,
+            key: `${metric.name}_${month.replace('月', '')}_budget_full`,
+            width: 90,
+            align: 'right',
+          }))
+        )
+        if (!isPriceMetric) {
+          // 全年预算合计数
+          children.push({
+            title: '全年预算合计数',
+            dataIndex: `${metric.name}_year_budget_total`,
+            key: `${metric.name}_year_budget_total`,
+            width: 110,
+            align: 'right',
+          })
+        }
         cols.push({
           title: metric.name,
-          children: [
-            // 1-9 月（实际数）
-            ...MONTHS_1_9.map(month => ({
-              title: `${month}(实际数)`,
-              dataIndex: `${metric.name}_${month.replace('月', '')}_actual`,
-              key: `${metric.name}_${month.replace('月', '')}_actual`,
-              width: 90,
-              align: 'right',
-            })),
-            // 10-12 月（预算数）
-            ...MONTHS_10_12.map(month => ({
-              title: `${month}(预算数)`,
-              dataIndex: `${metric.name}_${month.replace('月', '')}_budget`,
-              key: `${metric.name}_${month.replace('月', '')}_budget`,
-              width: 90,
-              align: 'right',
-            })),
-            // 12 月调整数
-            {
-              title: '12 月调整数',
-              dataIndex: `${metric.name}_12_adjust`,
-              key: `${metric.name}_12_adjust`,
-              width: 90,
-              align: 'right',
-            },
-            // 1-12 月（预算数）
-            ...MONTHS_1_12.map(month => ({
-              title: `${month}(预算数)`,
-              dataIndex: `${metric.name}_${month.replace('月', '')}_budget_full`,
-              key: `${metric.name}_${month.replace('月', '')}_budget_full`,
-              width: 90,
-              align: 'right',
-            })),
-          ],
+          children,
         })
       }
     })

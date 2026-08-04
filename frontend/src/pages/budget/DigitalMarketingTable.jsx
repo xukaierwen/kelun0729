@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Table, Button, Input, Space, message, Tag, Row, Col, Card, Modal, Form, Upload } from 'antd'
+import { Table, Button, Input, Space, message, Tag, Row, Col, Card, Modal, Form, Upload, Select } from 'antd'
 import { ReloadOutlined, SearchOutlined, DownloadOutlined, PlusOutlined, ImportOutlined, InboxOutlined } from '@ant-design/icons'
 import api from '../../api'
 
@@ -59,6 +59,12 @@ const FILTER_FIELDS = [
   { name: 'product_name', label: '产品名称', placeholder: '输入产品名称' },
 ]
 
+// 业务模式选项
+const BUSINESS_MODE_OPTIONS = [
+  { label: '数字营销', value: '数字营销' },
+  { label: '城市连锁', value: '城市连锁' },
+]
+
 export default function DigitalMarketingTable() {
   const [allData, setAllData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -85,12 +91,20 @@ export default function DigitalMarketingTable() {
 
   // 前端筛选
   const filteredData = allData.filter(row => {
-    return FILTER_FIELDS.every(f => {
+    const textMatch = FILTER_FIELDS.every(f => {
       const filterVal = filters[f.name]
       if (!filterVal || !filterVal.trim()) return true
       const rowVal = String(row[f.name] || '')
       return rowVal.toLowerCase().includes(filterVal.trim().toLowerCase())
     })
+    if (!textMatch) return false
+    // 业务模式筛选
+    const businessMode = filters.business_mode
+    if (businessMode) {
+      const rowMode = String(row.business_mode || '')
+      if (rowMode !== businessMode) return false
+    }
+    return true
   })
 
   const handleFilterChange = (name, value) => {
@@ -258,6 +272,19 @@ export default function DigitalMarketingTable() {
       {/* 筛选区域 */}
       <Card size="small" style={{ marginBottom: 16 }}>
         <Row gutter={[16, 12]} align="middle">
+          <Col key="business_mode" span={4}>
+            <Space.Compact style={{ width: '100%' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', padding: '0 8px', background: '#fafafa', border: '1px solid #d9d9d9', borderRadius: '6px 0 0 6px', whiteSpace: 'nowrap', fontSize: 14 }}>业务模式</span>
+              <Select
+                placeholder="请选择"
+                value={filters.business_mode || undefined}
+                onChange={value => handleFilterChange('business_mode', value || '')}
+                allowClear
+                style={{ flex: 1 }}
+                options={BUSINESS_MODE_OPTIONS}
+              />
+            </Space.Compact>
+          </Col>
           {FILTER_FIELDS.map(f => (
             <Col key={f.name} span={4}>
               <Input
