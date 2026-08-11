@@ -517,17 +517,6 @@ export default function ActualDataPage({ sectionKey }) {
         </div>
       </div>
 
-      {/* 章节标识 */}
-      <div className="section-bar">
-        <Tag color="blue">第 {def.section} 章 {def.title}</Tag>
-        {def.section === '2.5' && (
-          <span className="section-tip">数字营销模式与城市连锁模式共用本页面，业务模式字段在筛选条件中切换，列集合随业务模式动态显隐</span>
-        )}
-        {def.section === '2.1' && (
-          <span className="section-tip">片区直营与片区招商/城市连锁的「点位费类 / 客户费用类」指标列互斥显隐</span>
-        )}
-      </div>
-
       {/* 数据表格 */}
       <div className="table-container">
         <Table
