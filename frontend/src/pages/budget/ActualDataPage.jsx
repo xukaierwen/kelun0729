@@ -176,7 +176,8 @@ const generateMockRows = (def, values) => {
         return
       }
       if (g.suffix === 'auto') {
-        row[g.key] = '自动取数'
+        // 已有值（如增值税销项税率/最小规格转换率/支付口径）保留，否则显示自动取数
+        if (row[g.key] == null || row[g.key] === '') row[g.key] = '自动取数'
         return
       }
       for (let m = 1; m <= 12; m++) {
@@ -285,7 +286,7 @@ export default function ActualDataPage({ sectionKey }) {
             title: g.title,
             dataIndex: g.key,
             key: g.key,
-            width: 110,
+            width: g.width || 110,
             align: 'right',
             render: (v) => v ?? '-',
           })

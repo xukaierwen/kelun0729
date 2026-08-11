@@ -188,11 +188,15 @@ export const ACTUAL_DATA_SECTIONS = {
       { key: 'group_purchase_batch', title: '集采批次', width: 100 },
       { key: 'sales_mode', title: '片区销售模式', width: 110 },
       { key: 'delivery_mode', title: '基地直发/医贸发出', width: 130 },
-      { key: 'vat_rate', title: '增值税销项税率', width: 110 },
-      { key: 'min_spec_rate', title: '最小规格转换率', width: 110 },
     ],
     metricGroups: [
-      ...BASE_GROUPS,
+      // 最小规格转换率插在「销售量-转换后」和「销售量-最小规格」之间
+      ...BASE_GROUPS.slice(0, 3),
+      { key: 'min_spec_rate', title: '最小规格转换率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(3, 10),
+      // 增值税销项税率插在「销售收入-含税（折后）」和「销售收入-不含税（折前）」之间
+      { key: 'vat_rate', title: '增值税销项税率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(10),
       { ...DELIVERY_POINT_GROUP, showWhen: { field: 'sales_mode', in: ['片区直营'] } },
       ...POINT_FEE_GROUPS.map(g => ({ ...g, showWhen: { field: 'sales_mode', in: ['片区直营'] } })),
       ...CUSTOMER_FEE_GROUPS.map(g => ({ ...g, showWhen: { field: 'sales_mode', in: ['片区招商', '片区城市连锁'] } })),
@@ -213,14 +217,19 @@ export const ACTUAL_DATA_SECTIONS = {
       { key: 'data_scope', label: '数据口径', type: 'select', options: DATA_SCOPE_OPTIONS, defaultValue: '调整前' },
       { key: 'period_type', label: '当期/累计', type: 'select', options: PERIOD_TYPE_OPTIONS, defaultValue: '当期' },
     ],
-    fixedColumns: [
-      ...BASE_FIXED_COLUMNS,
-      { key: 'hq_promo_pay', title: '总部促销费-支付口径', width: 140 },
-    ],
+    fixedColumns: [...BASE_FIXED_COLUMNS.filter((c) => c.key !== 'vat_rate' && c.key !== 'min_spec_rate')],
     metricGroups: [
-      ...BASE_GROUPS,
+      // 最小规格转换率插在「销售量-转换后」和「销售量-最小规格」之间
+      ...BASE_GROUPS.slice(0, 3),
+      { key: 'min_spec_rate', title: '最小规格转换率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(3, 10),
+      // 增值税销项税率插在「销售收入-含税（折后）」和「销售收入-不含税（折前）」之间
+      { key: 'vat_rate', title: '增值税销项税率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(10),
       DELIVERY_POINT_GROUP,
       ...SERVICE_FEE_GROUPS,
+      // 总部促销费-支付口径放在「服务费金额」之后
+      { key: 'hq_promo_pay', title: '总部促销费-支付口径', suffix: 'auto', width: 140 },
       ...ASSESS_PRICE_GROUPS,
     ],
   },
@@ -238,15 +247,20 @@ export const ACTUAL_DATA_SECTIONS = {
       { key: 'data_scope', label: '数据口径', type: 'select', options: DATA_SCOPE_OPTIONS, defaultValue: '调整前' },
       { key: 'period_type', label: '当期/累计', type: 'select', options: PERIOD_TYPE_OPTIONS, defaultValue: '当期' },
     ],
-    fixedColumns: [
-      ...BASE_FIXED_COLUMNS,
-      { key: 'hq_promo_pay', title: '总部促销费-支付口径', width: 140 },
-      { key: 'hq_rebate_pay', title: '总部销售返利-支付口径', width: 150 },
-    ],
+    fixedColumns: [...BASE_FIXED_COLUMNS.filter((c) => c.key !== 'vat_rate' && c.key !== 'min_spec_rate')],
     metricGroups: [
-      ...BASE_GROUPS,
+      // 最小规格转换率插在「销售量-转换后」和「销售量-最小规格」之间
+      ...BASE_GROUPS.slice(0, 3),
+      { key: 'min_spec_rate', title: '最小规格转换率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(3, 10),
+      // 增值税销项税率插在「销售收入-含税（折后）」和「销售收入-不含税（折前）」之间
+      { key: 'vat_rate', title: '增值税销项税率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(10),
       DELIVERY_POINT_GROUP,
       ...SERVICE_FEE_GROUPS,
+      // 支付口径字段放在「服务费金额」之后
+      { key: 'hq_promo_pay', title: '总部促销费-支付口径', suffix: 'auto', width: 140 },
+      { key: 'hq_rebate_pay', title: '总部销售返利-支付口径', suffix: 'auto', width: 150 },
       ...ASSESS_PRICE_GROUPS,
     ],
   },
@@ -264,9 +278,15 @@ export const ACTUAL_DATA_SECTIONS = {
       { key: 'data_scope', label: '数据口径', type: 'select', options: DATA_SCOPE_OPTIONS, defaultValue: '调整前' },
       { key: 'period_type', label: '当期/累计', type: 'select', options: PERIOD_TYPE_OPTIONS, defaultValue: '当期' },
     ],
-    fixedColumns: [...BASE_FIXED_COLUMNS],
+    fixedColumns: [...BASE_FIXED_COLUMNS.filter((c) => c.key !== 'vat_rate' && c.key !== 'min_spec_rate')],
     metricGroups: [
-      ...BASE_GROUPS,
+      // 最小规格转换率插在「销售量-转换后」和「销售量-最小规格」之间
+      ...BASE_GROUPS.slice(0, 3),
+      { key: 'min_spec_rate', title: '最小规格转换率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(3, 10),
+      // 增值税销项税率插在「销售收入-含税（折后）」和「销售收入-不含税（折前）」之间
+      { key: 'vat_rate', title: '增值税销项税率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(10),
       DELIVERY_POINT_GROUP,
       { key: 'hq_team_point_ratio', title: '总部销售团队点位（%）', suffix: 'monthly', isPercent: true },
       { key: 'point_price', title: '点位费单价', suffix: 'monthly' },
@@ -308,8 +328,6 @@ export const ACTUAL_DATA_SECTIONS = {
       { key: 'analysis_arch', title: '分析架构', width: 110 },
       { key: 'group_purchase_attr', title: '集采属性', width: 100 },
       { key: 'group_purchase_batch', title: '集采批次', width: 100 },
-      { key: 'vat_rate', title: '增值税销项税率', width: 110 },
-      { key: 'min_spec_rate', title: '最小规格转换率', width: 110 },
       // 以下列：数字营销模式不展示，城市连锁模式展示
       { key: 'customer_name', title: '客户名称', width: 140, showWhen: { field: 'business_model', in: ['城市连锁'] } },
       { key: 'goods_class', title: '商品名分类', width: 110, showWhen: { field: 'business_model', in: ['城市连锁'] } },
@@ -324,7 +342,11 @@ export const ACTUAL_DATA_SECTIONS = {
     ],
     metricGroups: [
       // 数字营销&城市连锁：不展示「采购金额-含税」列
-      ...BASE_GROUPS.filter((g) => g.key !== 'purchase_amount_incl'),
+      ...BASE_GROUPS.slice(0, 3).filter((g) => g.key !== 'purchase_amount_incl'),
+      { key: 'min_spec_rate', title: '最小规格转换率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(3, 10).filter((g) => g.key !== 'purchase_amount_incl'),
+      { key: 'vat_rate', title: '增值税销项税率', suffix: 'auto' },
+      ...BASE_GROUPS.slice(10).filter((g) => g.key !== 'purchase_amount_incl'),
       DELIVERY_POINT_GROUP,
       // 以下组：数字营销模式不展示，城市连锁模式展示
       ...POINT_FEE_GROUPS.map(g => ({ ...g, showWhen: { field: 'business_model', in: ['城市连锁'] } })),
