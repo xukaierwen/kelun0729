@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Input } from 'antd';
+import React, { useState, useRef, useEffect } from 'react';
+import { Layout, Menu, Input, Badge, Popover, List, Tag } from 'antd';
 import {
   DashboardOutlined,
   DatabaseOutlined,
@@ -13,6 +13,7 @@ import {
   LineChartOutlined,
   BarChartOutlined,
   BgColorsOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import './MainLayout.css';
@@ -80,6 +81,7 @@ const secondLevelMenus = {
         { key: '/dimension/master/period', label: '期间' },
         { key: '/dimension/master/account', label: '科目维度' },
         { key: '/dimension/master/currency', label: '币种' },
+        { key: '/dimension/master/project', label: '项目' },
       ],
     },
     {
@@ -97,10 +99,14 @@ const secondLevelMenus = {
         { key: '/dimension/mapping/commodity-class', label: '商品名分类配置表' },
         { key: '/dimension/mapping/product-tag', label: '片区产品标识配置表' },
         { key: '/dimension/mapping/dept-belong', label: '归属部门配置表' },
-        { key: '/dimension/mapping/hq-salesman', label: '一级业务员配置表' },
+        { key: '/dimension/mapping/hq-salesman', label: '虚拟业务员映射表' },
+                { key: '/dimension/mapping/mgmt-team', label: '总部管理团队映射表' },
         { key: '/dimension/mapping/salesman-entity', label: '业务员预算实体配置表' },
         { key: '/dimension/mapping/customer-sap', label: '客户主数据映射表' },
         { key: '/dimension/mapping/virtual-product', label: '虚拟产品映射表' },
+                { key: '/dimension/mapping/virtual-customer', label: '虚拟客户映射表' },
+                        { key: '/dimension/mapping/analysis-convert-factor', label: '分析转换系数配置表' },
+                                { key: '/dimension/mapping/hq-dept-attribute', label: '总部直管部门属性维护表' },
       ],
     },
   ],
@@ -123,12 +129,11 @@ const secondLevelMenus = {
           key: 'actual-sales',
           label: '销售',
           children: [
-            { key: '/budget/actual-sales-digital', label: '数字营销&城市连锁' },
-            { key: '/budget/actual-sales-direct', label: '费用制片区-片区直营' },
-            { key: '/budget/actual-sales-investment', label: '费用制片区-片区招商' },
-            { key: '/budget/actual-sales-chain', label: '费用制片区-片区城市连锁' },
-            { key: '/budget/actual-sales-agent', label: '代理制片区&总代' },
+            { key: '/budget/actual-sales-region', label: '费用制片区' },
+            { key: '/budget/actual-sales-general-agent', label: '总代' },
+            { key: '/budget/actual-sales-agent-region', label: '代理制片区' },
             { key: '/budget/actual-sales-hq', label: '总部直营' },
+            { key: '/budget/actual-sales-digital', label: '数字营销&城市连锁' },
             { key: '/budget/actual-sales-summary', label: '销售实际数汇总查看' },
           ],
         },
@@ -272,6 +277,7 @@ const pageTitleMap = {
   '/dimension/master/period': '期间',
   '/dimension/master/account': '科目维度',
   '/dimension/master/currency': '币种',
+  '/dimension/master/project': '项目',
   '/dimension/mapping/business-mode-config': '业务模式配置表',
   '/dimension/mapping/product-owner-config': '产品负责人配置表',
   '/dimension/mapping/product-arch': '产品架构表',
@@ -282,16 +288,19 @@ const pageTitleMap = {
   '/dimension/mapping/commodity-class': '商品名分类配置表',
   '/dimension/mapping/product-tag': '片区产品标识配置表',
   '/dimension/mapping/dept-belong': '归属部门配置表',
-  '/dimension/mapping/hq-salesman': '一级业务员配置表',
+  '/dimension/mapping/hq-salesman': '虚拟业务员映射表',
+    '/dimension/mapping/mgmt-team': '总部管理团队映射表',
   '/dimension/mapping/salesman-entity': '业务员预算实体配置表',
   '/dimension/mapping/customer-sap': '客户主数据映射表',
   '/dimension/mapping/virtual-product': '虚拟产品映射表',
-  '/budget/actual-sales-digital': '数字营销&城市连锁',
-  '/budget/actual-sales-direct': '费用制片区-片区直营',
-  '/budget/actual-sales-investment': '费用制片区-片区招商',
-  '/budget/actual-sales-chain': '费用制片区-片区城市连锁',
-  '/budget/actual-sales-agent': '代理制片区&总代',
-  '/budget/actual-sales-hq': '总部直营',
+    '/dimension/mapping/virtual-customer': '虚拟客户映射表',
+      '/dimension/mapping/analysis-convert-factor': '分析转换系数配置表',
+        '/dimension/mapping/hq-dept-attribute': '总部直管部门属性维护表',
+  '/budget/actual-sales-region': '费用制片区-实际数',
+  '/budget/actual-sales-general-agent': '总代-实际数',
+  '/budget/actual-sales-agent-region': '代理制片区-实际数',
+  '/budget/actual-sales-hq': '总部直营-实际数',
+  '/budget/actual-sales-digital': '数字营销&城市连锁-实际数',
   '/budget/actual-sales-summary': '销售实际数汇总查看',
   '/budget/actual-expense-output': '运营费用输出表',
   '/budget/actual-cost-assessment': '成本实际数-考核成本',
@@ -420,21 +429,20 @@ function MainLayout() {
   // 点击三级菜单（父级或最终页面）
   const handleThirdLevelClick = (item) => {
     if (item.children) {
-      // 有子菜单，显示第 4 级
-      setActiveThirdLevel(item.key);
+      // 有子菜单，展开/折叠
+      if (activeThirdLevel === item.key) {
+        setActiveThirdLevel(null);
+        setActiveFourthLevel(null);
+      } else {
+        setActiveThirdLevel(item.key);
+        setActiveFourthLevel(null);
+      }
     } else if (item.key.startsWith('/')) {
       // 最终页面
       navigate(item.key);
       setActiveFirstLevel(null);
       setActiveSecondLevel(null);
       setActiveThirdLevel(null);
-    }
-  };
-
-  // 鼠标悬停三级菜单（自动滑出）
-  const handleThirdLevelHover = (item) => {
-    if (item.children) {
-      setActiveThirdLevel(item.key);
       setActiveFourthLevel(null);
     }
   };
@@ -442,8 +450,12 @@ function MainLayout() {
   // 点击四级菜单（父级或最终页面）
   const handleFourthLevelClick = (item) => {
     if (item.children) {
-      // 有子菜单，显示第 5 级
-      setActiveFourthLevel(item.key);
+      // 有子菜单，展开/折叠
+      if (activeFourthLevel === item.key) {
+        setActiveFourthLevel(null);
+      } else {
+        setActiveFourthLevel(item.key);
+      }
     } else if (item.key.startsWith('/')) {
       // 最终页面
       navigate(item.key);
@@ -451,13 +463,6 @@ function MainLayout() {
       setActiveSecondLevel(null);
       setActiveThirdLevel(null);
       setActiveFourthLevel(null);
-    }
-  };
-
-  // 鼠标悬停四级菜单（自动滑出）
-  const handleFourthLevelHover = (item) => {
-    if (item.children) {
-      setActiveFourthLevel(item.key);
     }
   };
 
@@ -509,8 +514,38 @@ function MainLayout() {
     ? (currentFourthLevel.find(item => item.key === activeFourthLevel)?.label || '')
     : '';
 
+  // 点击内容区域收起所有菜单
+  const handleContentClick = () => {
+    setActiveFirstLevel(null);
+    setActiveSecondLevel(null);
+    setActiveThirdLevel(null);
+    setActiveFourthLevel(null);
+  };
+
   // 获取当前页面标题
   const currentTitle = pageTitleMap[location.pathname] || '页面';
+
+  // 审核通知数据
+  const [notificationOpen, setNotificationOpen] = useState(false)
+  const notificationRef = useRef(null)
+
+  // 点击外部关闭通知面板
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (notificationRef.current && !notificationRef.current.contains(e.target)) {
+        setNotificationOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+  const notifications = [
+    { id: 1, title: '数字营销&城市连锁 销售预算待审核', desc: '张三提交了2026年度销售预算，待您审核', time: '10分钟前', status: 'pending' },
+    { id: 2, title: '费用制片区-片区直营 预计完成数待审核', desc: '李四提交了片区直营预计完成数', time: '30分钟前', status: 'pending' },
+    { id: 3, title: '费用制片区-片区招商 实际数待审核', desc: '王五提交了片区招商实际数数据', time: '1小时前', status: 'pending' },
+    { id: 4, title: '总部目标编制 待审核', desc: '2026年度总部目标编制完成，待审核确认', time: '2小时前', status: 'pending' },
+    { id: 5, title: '运营费用校验表 待审核', desc: '运营费用校验表已提交，请审核', time: '3小时前', status: 'pending' },
+  ]
 
   return (
     <Layout className="main-layout">
@@ -532,13 +567,39 @@ function MainLayout() {
           </div>
         </div>
         <div className="header-right">
+          <div className="notification-wrapper" ref={notificationRef}>
+            <div className="notification-bell" onClick={() => setNotificationOpen(!notificationOpen)}>
+              <Badge count={notifications.length} size="small" offset={[-2, 0]}>
+                <BellOutlined style={{ fontSize: 18, color: 'white', cursor: 'pointer' }} />
+              </Badge>
+            </div>
+
+            {/* 审核通知下拉面板 */}
+            {notificationOpen && (
+              <div className="notification-panel">
+                <div className="notification-header">
+                  <span>待审核内容</span>
+                  <Tag color="blue">{notifications.length} 条</Tag>
+                </div>
+                <div className="notification-list">
+                  {notifications.map(item => (
+                    <div key={item.id} className="notification-item">
+                      <div className="notification-item-title">{item.title}</div>
+                      <div className="notification-item-desc">{item.desc}</div>
+                      <div className="notification-item-time">{item.time}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
           <span className="user-name">管理员</span>
         </div>
       </Header>
 
-      <Layout className="body-layout">
+      <Layout className="body-layout" onClick={handleContentClick}>
         {/* 左侧一级菜单 */}
-        <Sider className="first-level-sider" width={200} theme="light">
+        <Sider className="first-level-sider" width={150} theme="light" onClick={(e) => e.stopPropagation()}>
           <div className="search-area">
             <Input
               placeholder="全站搜索"
@@ -555,7 +616,6 @@ function MainLayout() {
                 key={item.key}
                 className={`first-level-item ${activeFirstLevel === item.key ? 'active' : ''} ${location.pathname === item.key ? 'selected' : ''}`}
                 onClick={() => handleFirstLevelClick(item.key)}
-                onMouseEnter={() => handleFirstLevelHover(item.key)}
               >
                 <span className="menu-icon">{item.icon}</span>
                 <span className="menu-label">{item.label}</span>
@@ -567,7 +627,7 @@ function MainLayout() {
 
         {/* 二级菜单面板 */}
         {activeFirstLevel && (
-          <div className="second-level-panel">
+          <div className="second-level-panel" onClick={(e) => e.stopPropagation()}>
             <div className="panel-header">
               <span>{firstLevelMenus.find(m => m.key === activeFirstLevel)?.label}</span>
             </div>
@@ -577,7 +637,6 @@ function MainLayout() {
                   key={item.key}
                   className={`second-level-item ${activeSecondLevel === item.key ? 'active' : ''}`}
                   onClick={() => handleSecondLevelClick(item)}
-                  onMouseEnter={() => handleSecondLevelHover(item)}
                 >
                   <span className="menu-icon">{item.icon}</span>
                   <span className="menu-label">{item.label}</span>
@@ -588,64 +647,52 @@ function MainLayout() {
           </div>
         )}
 
-        {/* 三级菜单面板 */}
+        {/* 三级菜单面板 - 最多向右展开三级，之后向下展开 + 缩进 */}
         {activeSecondLevel && currentDisplayLevel.length > 0 && (
-          <div className="third-level-panel">
+          <div className="third-level-panel" onClick={(e) => e.stopPropagation()}>
             <div className="panel-header">
               <span>{currentPanelTitle}</span>
             </div>
             <div className="third-level-menu">
               {currentDisplayLevel.map(item => (
-                <div
-                  key={item.key}
-                  className={`third-level-item ${activeThirdLevel === item.key ? 'active' : ''}`}
-                  onClick={() => handleThirdLevelClick(item)}
-                  onMouseEnter={() => handleThirdLevelHover(item)}
-                >
-                  <span className="menu-label">{item.label}</span>
-                  {item.children && <span className="arrow-icon">›</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 四级菜单面板 */}
-        {activeThirdLevel && currentFourthLevel.length > 0 && (
-          <div className="fourth-level-panel">
-            <div className="panel-header">
-              <span>{fourthLevelTitle}</span>
-            </div>
-            <div className="fourth-level-menu">
-              {currentFourthLevel.map(item => (
-                <div
-                  key={item.key}
-                  className={`fourth-level-item ${activeFourthLevel === item.key ? 'active' : ''}`}
-                  onClick={() => handleFourthLevelClick(item)}
-                  onMouseEnter={() => handleFourthLevelHover(item)}
-                >
-                  <span className="menu-label">{item.label}</span>
-                  {item.children && <span className="arrow-icon">›</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 五级菜单面板 */}
-        {activeFourthLevel && currentFifthLevel.length > 0 && (
-          <div className="fifth-level-panel">
-            <div className="panel-header">
-              <span>{fifthLevelTitle}</span>
-            </div>
-            <div className="fifth-level-menu">
-              {currentFifthLevel.map(item => (
-                <div
-                  key={item.key}
-                  className={`fifth-level-item ${location.pathname === item.key ? 'active' : ''}`}
-                  onClick={() => handleFifthLevelClick(item)}
-                >
-                  <span className="menu-label">{item.label}</span>
+                <div key={item.key}>
+                  <div
+                    className={`third-level-item ${activeThirdLevel === item.key ? 'active' : ''}`}
+                    onClick={() => handleThirdLevelClick(item)}
+                  >
+                    <span className="menu-label">{item.label}</span>
+                    {item.children && <span className={activeThirdLevel === item.key ? 'arrow-icon expanded' : 'arrow-icon'}>›</span>}
+                  </div>
+                  {/* 四级菜单 - 内嵌缩进 */}
+                  {activeThirdLevel === item.key && currentFourthLevel.length > 0 && (
+                    <div className="sub-menu-inner">
+                      {currentFourthLevel.map(child => (
+                        <div key={child.key}>
+                          <div
+                            className={`sub-menu-item level-4 ${activeFourthLevel === child.key ? 'active' : ''} ${location.pathname === child.key ? 'selected' : ''}`}
+                            onClick={() => handleFourthLevelClick(child)}
+                          >
+                            <span className="menu-label">{child.label}</span>
+                            {child.children && <span className={activeFourthLevel === child.key ? 'arrow-icon expanded' : 'arrow-icon'}>›</span>}
+                          </div>
+                          {/* 五级菜单 - 内嵌缩进 */}
+                          {activeFourthLevel === child.key && currentFifthLevel.length > 0 && (
+                            <div className="sub-menu-inner">
+                              {currentFifthLevel.map(grandchild => (
+                                <div
+                                  key={grandchild.key}
+                                  className={`sub-menu-item level-5 ${location.pathname === grandchild.key ? 'active' : ''}`}
+                                  onClick={() => handleFifthLevelClick(grandchild)}
+                                >
+                                  <span className="menu-label">{grandchild.label}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

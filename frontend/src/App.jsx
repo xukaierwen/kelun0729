@@ -11,15 +11,19 @@ import BudgetDashboard from './pages/budget/BudgetDashboard';
 import masterDataPages, { mappingTablePages } from './pages/budget/MasterDataFactory';
 import SalesBudgetV2 from './pages/budget/SalesBudgetV2';
 import OperationBudget from './pages/budget/OperationBudget';
-import DigitalMarketingTable from './pages/budget/DigitalMarketingTable';
+import ActualDataPage from './pages/budget/ActualDataPage';
 import SalesActualSummary from './pages/budget/SalesActualSummary';
-import ActualDataTable from './pages/budget/ActualDataTable';
 import PlannedCompleteTable from './pages/budget/PlannedCompleteTable';
 import PlannedCompleteReview from './pages/budget/PlannedCompleteReview';
 import TargetCompileTable from './pages/budget/TargetCompileTable';
 import TargetReviewTable from './pages/budget/TargetReviewTable';
 import OverviewTable from './pages/budget/OverviewTable';
 import SalesBudgetTable from './pages/budget/SalesBudgetTable';
+import AnalysisReport from './pages/budget/AnalysisReport';
+import DimensionNavigator from './pages/budget/DimensionNavigator';
+import BudgetNavigator from './pages/budget/BudgetNavigator';
+import AnnualBudgetNavigator from './pages/budget/AnnualBudgetNavigator';
+import DataImportNavigator from './pages/budget/DataImportNavigator';
 import PlaceholderPage from './components/PlaceholderPage';
 
 import './App.css';
@@ -56,6 +60,9 @@ function App() {
             {/* 首页概览 */}
             <Route path="dashboard" element={<BudgetDashboard />} />
             
+            {/* 维度管理 - 导航页 */}
+            <Route path="dimension" element={<DimensionNavigator />} />
+            
             {/* 维度管理 - 主数据管理 */}
             <Route path="dimension/master/type" element={renderMasterDataPage('md-mgmt-type', '总部管理类型')} />
             <Route path="dimension/master/team" element={renderMasterDataPage('md-mgmt-team', '总部管理团队')} />
@@ -81,6 +88,7 @@ function App() {
             <Route path="dimension/master/period" element={renderMasterDataPage('md-period', '期间')} />
             <Route path="dimension/master/account" element={renderMasterDataPage('md-account', '科目维度')} />
             <Route path="dimension/master/currency" element={renderMasterDataPage('md-currency', '币种')} />
+            <Route path="dimension/master/project" element={renderMasterDataPage('md-project', '项目')} />
             
             {/* 维度管理 - 映射表管理 */}
             <Route path="dimension/mapping/business-mode-config" element={renderMappingPage('map-business-mode-config', '业务模式配置表')} />
@@ -93,19 +101,41 @@ function App() {
             <Route path="dimension/mapping/commodity-class" element={renderMappingPage('map-commodity-class', '商品名分类配置表')} />
             <Route path="dimension/mapping/product-tag" element={renderMappingPage('map-product-tag', '片区产品标识配置表')} />
             <Route path="dimension/mapping/dept-belong" element={renderMappingPage('map-dept-belong', '归属部门配置表')} />
-            <Route path="dimension/mapping/hq-salesman" element={renderMappingPage('map-hq-salesman', '一级业务员配置表')} />
+            <Route path="dimension/mapping/hq-salesman" element={renderMappingPage('map-hq-salesman', '虚拟业务员映射表')} />
+                        <Route path="dimension/mapping/mgmt-team" element={renderMappingPage('map-mgmt-team', '总部管理团队映射表')} />
             <Route path="dimension/mapping/salesman-entity" element={renderMappingPage('map-salesman-entity', '业务员预算实体配置表')} />
             <Route path="dimension/mapping/customer-sap" element={renderMappingPage('map-customer-sap', '客户主数据映射表')} />
             <Route path="dimension/mapping/virtual-product" element={renderMappingPage('map-virtual-product', '虚拟产品映射表')} />
+                        <Route path="dimension/mapping/virtual-customer" element={renderMappingPage('map-virtual-customer', '虚拟客户映射表')} />
+                                    <Route path="dimension/mapping/analysis-convert-factor" element={renderMappingPage('map-analysis-convert-factor', '分析转换系数配置表')} />
+                                                <Route path="dimension/mapping/hq-dept-attribute" element={renderMappingPage('map-hq-dept-attribute', '总部直管部门属性维护表')} />
             
-            {/* 预算管理 */}
-            <Route path="budget/actual-sales-digital" element={<ActualDataTable pageTitle="数字营销&城市连锁" />} />
-            <Route path="budget/actual-sales-direct" element={<ActualDataTable pageTitle="费用制片区-片区直营" />} />
-            <Route path="budget/actual-sales-investment" element={<ActualDataTable pageTitle="费用制片区-片区招商" />} />
-            <Route path="budget/actual-sales-chain" element={<ActualDataTable pageTitle="费用制片区-片区城市连锁" />} />
-            <Route path="budget/actual-sales-agent" element={<ActualDataTable pageTitle="代理制片区&总代" />} />
-            <Route path="budget/actual-sales-hq" element={<ActualDataTable pageTitle="总部直营" />} />
+            {/* 预算编制 - 导航页 */}
+            <Route path="budget/nav" element={<BudgetNavigator />} />
+            
+            {/* 年度预算 - 导航页 */}
+            <Route path="budget/annual/nav" element={<AnnualBudgetNavigator />} />
+            
+            {/* 基础数据导入 - 导航页 */}
+            <Route path="budget/import/nav" element={<DataImportNavigator />} />
+            
+            {/* 预算管理 - 实际数（第二章 2.1-2.5） */}
+            {/* 2.1 费用制片区（含片区直营/片区招商/片区城市连锁，片区销售模式下拉切换） */}
+            <Route path="budget/actual-sales-region" element={<ActualDataPage sectionKey="2.1" />} />
+            {/* 2.2 总代（业务模式锁定为总代） */}
+            <Route path="budget/actual-sales-general-agent" element={<ActualDataPage sectionKey="2.2" />} />
+            {/* 2.3 代理制片区（业务模式锁定为代理制片区） */}
+            <Route path="budget/actual-sales-agent-region" element={<ActualDataPage sectionKey="2.3" />} />
+            {/* 2.4 总部直营（业务模式锁定为总部直营） */}
+            <Route path="budget/actual-sales-hq" element={<ActualDataPage sectionKey="2.4" />} />
+            {/* 2.5 数字营销&城市连锁（共用页面，业务模式页内切换） */}
+            <Route path="budget/actual-sales-digital" element={<ActualDataPage sectionKey="2.5" />} />
             <Route path="budget/actual-sales-summary" element={<SalesActualSummary />} />
+            {/* 旧路由重定向（原三个费用制片区页面合并为 2.1，代理制片区&总代拆分为 2.2/2.3） */}
+            <Route path="budget/actual-sales-direct" element={<Navigate to="/budget/actual-sales-region" replace />} />
+            <Route path="budget/actual-sales-investment" element={<Navigate to="/budget/actual-sales-region" replace />} />
+            <Route path="budget/actual-sales-chain" element={<Navigate to="/budget/actual-sales-region" replace />} />
+            <Route path="budget/actual-sales-agent" element={<Navigate to="/budget/actual-sales-general-agent" replace />} />
             <Route path="budget/actual-expense-output" element={<PlaceholderPage title="运营费用输出表" />} />
             <Route path="budget/actual-cost-assessment" element={<PlaceholderPage title="成本实际数-考核成本" />} />
             <Route path="budget/annual/target-compile" element={<TargetCompileTable />} />
@@ -156,7 +186,7 @@ function App() {
             <Route path="budget/planned-complete-review" element={<PlannedCompleteReview />} />
             <Route path="budget/adjust-plan" element={<PlaceholderPage title="预算调整6+6" />} />
             <Route path="budget/rolling-forecast" element={<PlaceholderPage title="滚动预测" />} />
-            <Route path="budget/analysis" element={<PlaceholderPage title="预实分析" />} />
+            <Route path="budget/analysis" element={<AnalysisReport />} />
             <Route path="budget/calc-program" element={<PlaceholderPage title="计算程序" />} />
             
             {/* AI模型管理 */}

@@ -1,0 +1,72 @@
+/* 预算编制指标卡悬浮效果 */
+.budget-card-wrapper {
+  position: relative;
+}
+
+.budget-main-card {
+  transition: all 0.3s ease;
+}
+
+.budget-main-card.hovered {
+  opacity: 0.3;
+}
+
+/* 悬浮快捷卡片覆盖层 */
+.budget-quick-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid #91caff;
+  box-shadow: 0 4px 16px rgba(22, 119, 255, 0.2);
+  animation: fadeInScale 0.25s ease-out;
+  z-index: 10;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.budget-quick-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fafafa;
+}
+
+.budget-quick-card:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.budget-quick-card-icon {
+  font-size: 24px;
+}
+
+.budget-quick-card-title {
+  font-size: 13px;
+  color: #333;
+  font-weight: 500;
+  white-space: nowrap;
+}

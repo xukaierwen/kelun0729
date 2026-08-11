@@ -87,6 +87,10 @@ export function createMasterDataPage(pageKey, defSource = 'master') {
         allowSearch={true}
         allowImportExport={false}
         rowKey="id"
+        searchFields={def.searchFields}
+        readonly={def.readonly}
+        formHideFields={def.formHideFields}
+        selectAllFields={defSource === 'mapping'}
       />
     )
   }

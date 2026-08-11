@@ -73,6 +73,97 @@
 .header-right {
   color: white;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+.notification-bell {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.notification-bell:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-panel {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  width: 360px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  z-index: 200;
+  animation: fadeInDown 0.2s ease-out;
+  overflow: hidden;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.notification-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.notification-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f5f5f5;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.notification-item:hover {
+  background: #f5f5f5;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.notification-item-desc {
+  font-size: 11px;
+  color: #8c8c8c;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notification-item-time {
+  font-size: 11px;
+  color: #bfbfbf;
 }
 
 .user-name {
@@ -142,6 +233,11 @@
 .arrow-icon {
   font-size: 16px;
   color: #999;
+  transition: transform 0.2s ease;
+}
+
+.arrow-icon.expanded {
+  transform: rotate(90deg);
 }
 
 /* 二级菜单面板 */
@@ -231,70 +327,45 @@
   font-weight: 500;
 }
 
-/* 四级菜单面板 */
-.fourth-level-panel {
-  width: 200px;
-  background: white;
-  border-right: 1px solid #f0f0f0;
-  height: calc(100vh - 48px);
-  overflow-y: auto;
-  animation: slideIn 0.2s ease-out;
+/* 内嵌子菜单容器 */
+.sub-menu-inner {
+  background: #fafafa;
 }
 
-.fourth-level-menu {
-  padding: 8px 0;
-}
-
-.fourth-level-item {
+/* 内嵌子菜单项 */
+.sub-menu-item {
   padding: 10px 16px;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 13px;
   color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.fourth-level-item:hover {
-  background: #f5f5f5;
+.sub-menu-item:hover {
+  background: #f0f0f0;
   color: #1890ff;
 }
 
-.fourth-level-item.active {
+.sub-menu-item.active {
   background: #e6f7ff;
   color: #1890ff;
   font-weight: 500;
 }
 
-/* 五级菜单面板 */
-.fifth-level-panel {
-  width: 200px;
-  background: white;
-  border-right: 1px solid #f0f0f0;
-  height: calc(100vh - 48px);
-  overflow-y: auto;
-  animation: slideIn 0.2s ease-out;
-}
-
-.fifth-level-menu {
-  padding: 8px 0;
-}
-
-.fifth-level-item {
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 13px;
-  color: #666;
-}
-
-.fifth-level-item:hover {
-  background: #f5f5f5;
-  color: #1890ff;
-}
-
-.fifth-level-item.active {
+.sub-menu-item.selected {
   background: #e6f7ff;
   color: #1890ff;
-  font-weight: 500;
+}
+
+.sub-menu-item.level-4 {
+  padding-left: 32px;
+}
+
+.sub-menu-item.level-5 {
+  padding-left: 48px;
 }
 
 /* 内容区域 */
@@ -308,26 +379,20 @@
 /* 滚动条样式 */
 .first-level-sider::-webkit-scrollbar,
 .second-level-panel::-webkit-scrollbar,
-.third-level-panel::-webkit-scrollbar,
-.fourth-level-panel::-webkit-scrollbar,
-.fifth-level-panel::-webkit-scrollbar {
+.third-level-panel::-webkit-scrollbar {
   width: 6px;
 }
 
 .first-level-sider::-webkit-scrollbar-thumb,
 .second-level-panel::-webkit-scrollbar-thumb,
-.third-level-panel::-webkit-scrollbar-thumb,
-.fourth-level-panel::-webkit-scrollbar-thumb,
-.fifth-level-panel::-webkit-scrollbar-thumb {
+.third-level-panel::-webkit-scrollbar-thumb {
   background: #d9d9d9;
   border-radius: 3px;
 }
 
 .first-level-sider::-webkit-scrollbar-track,
 .second-level-panel::-webkit-scrollbar-track,
-.third-level-panel::-webkit-scrollbar-track,
-.fourth-level-panel::-webkit-scrollbar-track,
-.fifth-level-panel::-webkit-scrollbar-track {
+.third-level-panel::-webkit-scrollbar-track {
   background: transparent;
 }
 
@@ -338,9 +403,7 @@
   }
   
   .second-level-panel,
-  .third-level-panel,
-  .fourth-level-panel,
-  .fifth-level-panel {
+  .third-level-panel {
     position: fixed;
     z-index: 99;
     height: calc(100vh - 48px);

@@ -261,6 +261,77 @@ function insertInitialData(db) {
 
   insertDicts(defaultDicts);
   console.log('✅ 插入默认字典');
+
+  // 插入主数据示例数据
+  insertMasterDataSamples(db);
+}
+
+// 插入主数据示例数据
+function insertMasterDataSamples(db) {
+  const insert = db.prepare(`
+    INSERT OR IGNORE INTO master_data (table_key, data_json)
+    VALUES (?, ?)
+  `);
+
+  const sampleData = [
+    // 总部管理类型
+    ['md-mgmt-type', JSON.stringify({ id: 'sample_1', seq: 1, manage_type_code: 'MT001', manage_type_name: '南区', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 总部管理团队
+    ['md-mgmt-team', JSON.stringify({ id: 'sample_2', seq: 1, manage_team_code: 'TEAM001', manage_team_name: '南一区', manage_type_code: 'MT001', manage_type_name: '南区', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 业务模式
+    ['md-business-mode', JSON.stringify({ id: 'sample_3', seq: 1, business_model_code: 'BM001', business_model_name: '数字营销', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 片区销售模式
+    ['md-sales-mode', JSON.stringify({ id: 'sample_4', seq: 1, sales_model_code: 'SM001', sales_model_name: '直营', business_model_code: 'BM001', business_model_name: '数字营销', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 省份
+    ['md-province', JSON.stringify({ id: 'sample_5', seq: 1, province_code: '110000', province_name: '北京市', province_short: '京', is_valid: 1, updatedAt: new Date().toLocaleString() })],
+    // 片区
+    ['md-region', JSON.stringify({ id: 'sample_6', seq: 1, region_code: 'RG001', region_name: '北京片区', province_code: '110000', province_name: '北京市', province_short: '京', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 实体
+    ['md-entity', JSON.stringify({ id: 'sample_7', seq: 1, entity_code: 'ENT001', entity_name: '科伦集团', parent_entity_code: '', company_nature: '集团', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 销售组
+    ['md-sales-group', JSON.stringify({ id: 'sample_8', seq: 1, sales_group_code: 'SG001', sales_group_name: '销售一组', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 销售办公室
+    ['md-sales-office', JSON.stringify({ id: 'sample_9', seq: 1, sales_office_code: 'SO001', sales_office_name: '销售办公室A', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 一级业务员（总部）
+    ['md-sales-officer-hq', JSON.stringify({ id: 'sample_10', seq: 1, salesman_code: 'HQ001', salesman_name: '张三', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 片区管理区域
+    ['md-region-dimension', JSON.stringify({ id: 'sample_11', seq: 1, region_dim_code: 'RD001', region_dim_name: '北京区域', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 客户
+    ['md-customer', JSON.stringify({ id: 'sample_12', seq: 1, customer_code: 'CUST001', customer_name: '科伦药业', customer_type: '医院', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 产品
+    ['md-product', JSON.stringify({ id: 'sample_13', seq: 1, product_code: 'P001', product_name: '氯化钠注射液', spec: '250ml', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 产品架构
+    ['md-product-arch', JSON.stringify({ id: 'sample_14', seq: 1, arch_code: 'ARCH001', arch_name: '大输液', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 部门
+    ['md-department', JSON.stringify({ id: 'sample_15', seq: 1, dept_code: 'DEPT001', dept_name: '销售部', parent_dept_code: '', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 业务员（湖南湖北专用）
+    ['md-salesman-hn', JSON.stringify({ id: 'sample_16', seq: 1, salesman_code: 'HN001', salesman_name: '李四', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 流向单位（湖南专用）
+    ['md-flow-unit', JSON.stringify({ id: 'sample_17', seq: 1, flow_code: 'FU001', flow_name: '长沙医院', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 场景
+    ['md-scenario', JSON.stringify({ id: 'sample_18', seq: 1, scenario_code: 'SC001', scenario_name: '预算编制', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 数据口径
+    ['md-data-scope', JSON.stringify({ id: 'sample_19', seq: 1, scope_code: 'DS001', scope_name: '调整前', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 版本
+    ['md-version', JSON.stringify({ id: 'sample_20', seq: 1, version_code: 'V001', version_name: 'V1.0', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 年份
+    ['md-year', JSON.stringify({ id: 'sample_21', seq: 1, year_code: '2026', year_name: '2026年', is_valid: 1, valid_from: '2026-01-01', valid_to: '2026-12-31', updatedAt: new Date().toLocaleString() })],
+    // 期间
+    ['md-period', JSON.stringify({ id: 'sample_22', seq: 1, period_code: 'P01', period_name: '1月', quarter: 'Q1', half_year: 'H1', full_year: '2026', is_valid: 1, valid_from: '2026-01-01', valid_to: '2026-01-31', updatedAt: new Date().toLocaleString() })],
+    // 科目维度
+    ['md-account', JSON.stringify({ id: 'sample_23', seq: 1, account_code: 'ACC001', account_name: '销售收入', parent_code: '', parent_name: '', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+    // 币种
+    ['md-currency', JSON.stringify({ id: 'sample_24', seq: 1, currency_code: 'CNY', currency_name: '人民币', country: '中国', is_valid: 1, valid_from: '2024-01-01', valid_to: '2099-12-31', updatedAt: new Date().toLocaleString() })],
+  ];
+
+  const insertMany = db.transaction((data) => {
+    for (const [key, json] of data) {
+      insert.run(key, json);
+    }
+  });
+
+  insertMany(sampleData);
+  console.log('✅ 插入主数据示例数据');
 }
 
 // 获取数据库实例
