@@ -67,11 +67,11 @@
 .actual-data-page .search-buttons {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
-  padding-bottom: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  align-self: flex-start;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .actual-data-page .search-buttons .ant-btn {
@@ -82,6 +82,11 @@
 
 .actual-data-page .search-buttons .ant-btn-primary {
   background: #1677ff;
+}
+
+.actual-data-page .search-buttons .ant-btn-link {
+  padding: 0 6px;
+  height: 28px;
 }
 
 /* 章节标识条 */

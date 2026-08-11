@@ -7,6 +7,8 @@ import {
   ExportOutlined,
   SettingOutlined,
   LinkOutlined,
+  DownOutlined,
+  UpOutlined,
 } from '@ant-design/icons'
 import {
   ACTUAL_DATA_SECTIONS,
@@ -235,14 +237,21 @@ export default function ActualDataPage({ sectionKey }) {
 
   const [loading, setLoading] = useState(false)
   const [dataSource, setDataSource] = useState([])
-  const [periods, setPeriods] = useState({})          // 期间开关（默认全部关闭）
+  const [periods, setPeriods] = useState({})
   const [periodModalOpen, setPeriodModalOpen] = useState(false)
-  const [searchModal, setSearchModal] = useState(null) // 弹窗查询 { filter, keyword }
+  const [searchModal, setSearchModal] = useState(null)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [importModalOpen, setImportModalOpen] = useState(false)
+  const [searchExpanded, setSearchExpanded] = useState(false)
 
   const dataScope = values.data_scope
   const periodType = values.period_type
+
+  // 筛选器分两行：第一行显示 4 个，其余点击「更多」展开
+  const FIRST_ROW_COUNT = 4
+  const firstRowFilters = def.filters.slice(0, FIRST_ROW_COUNT)
+  const hiddenFilters = def.filters.slice(FIRST_ROW_COUNT)
+  const hasHiddenFilters = hiddenFilters.length > 0
 
   // 保存按钮可用条件：数据口径=调整 且 当期/累计=当期
   const canSave = dataScope === '调整' && periodType === '当期'
@@ -461,7 +470,21 @@ export default function ActualDataPage({ sectionKey }) {
               .reduce((acc, f) => ({ ...acc, [f.key]: f.defaultValue }), {}),
           }}
         >
-          {def.filters.map((filter) => (
+          {firstRowFilters.map((filter) => (
+            <Form.Item key={filter.key} label={filter.label} name={filter.key} className="search-field-item">
+              {filter.type === 'select' && filter.dependsOn === 'mgmt_type' ? (
+                <Select size="small" placeholder="请选择" allowClear className="filter-select">
+                  {(MGMT_TEAM_MAP[mgmtTypeValue] || []).map((t) => (
+                    <Select.Option key={t} value={t}>{t}</Select.Option>
+                  ))}
+                </Select>
+              ) : (
+                renderFilterControl(filter)
+              )}
+            </Form.Item>
+          ))}
+          {/* 隐藏筛选器：点击「更多」展开 */}
+          {searchExpanded && hiddenFilters.map((filter) => (
             <Form.Item key={filter.key} label={filter.label} name={filter.key} className="search-field-item">
               {filter.type === 'select' && filter.dependsOn === 'mgmt_type' ? (
                 <Select size="small" placeholder="请选择" allowClear className="filter-select">
@@ -476,6 +499,13 @@ export default function ActualDataPage({ sectionKey }) {
           ))}
         </Form>
         <div className="search-buttons">
+          {/* 更多/收起按钮 */}
+          {hasHiddenFilters && (
+            <Button size="small" type="link" onClick={() => setSearchExpanded(!searchExpanded)}>
+              {searchExpanded ? '收起' : '更多'}
+              {searchExpanded ? <UpOutlined /> : <DownOutlined />}
+            </Button>
+          )}
           <Button size="small" icon={<SettingOutlined />} onClick={() => setPeriodModalOpen(true)}>
             期间设置{openedCount > 0 && <Tag color="green" style={{ marginLeft: 4 }}>{openedCount}月开</Tag>}
           </Button>

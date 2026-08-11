@@ -735,6 +735,7 @@ export const MAPPING_TABLE_DEFS = {
   },
   'map-analysis-convert-factor': {
     name: '分析转换系数配置表',
+    searchFields: ['year', 'product_code', 'product_name', 'is_valid'],
     formHideFields: ['valid_from', 'valid_to'],
     columns: [
       { dataIndex: 'seq', title: '序号', key: 'seq' },
