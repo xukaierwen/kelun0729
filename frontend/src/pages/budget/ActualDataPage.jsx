@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Form, Select, Button, Space, Table, Input, Modal, InputNumber, Switch, Tag, message } from 'antd'
 import {
   SearchOutlined,
@@ -245,6 +245,32 @@ export default function ActualDataPage({ sectionKey }) {
   const [importModalOpen, setImportModalOpen] = useState(false)
   const [searchExpanded, setSearchExpanded] = useState(false)
 
+  // 默认筛选值（挂载 / sectionKey 切换时应用）
+  const defaultValues = {
+    year: String(new Date().getFullYear()),
+    data_scope: '调整前',
+    period_type: '当期',
+    ...def.filters
+      .filter((f) => f.defaultValue !== undefined)
+      .reduce((acc, f) => ({ ...acc, [f.key]: f.defaultValue }), {}),
+  }
+
+  // 五个章节路由复用同一组件实例，切换时必须重置表单与页面状态，
+  // 否则业务模式等字段会残留上一个章节的值（如 2.2 的「总代」）
+  useEffect(() => {
+    form.resetFields()
+    form.setFieldsValue(defaultValues)
+    setLoading(false)
+    setDataSource([])
+    setPeriods({})
+    setPeriodModalOpen(false)
+    setSearchModal(null)
+    setSearchKeyword('')
+    setImportModalOpen(false)
+    setSearchExpanded(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionKey])
+
   const dataScope = values.data_scope
   const periodType = values.period_type
 
@@ -462,14 +488,7 @@ export default function ActualDataPage({ sectionKey }) {
           form={form}
           layout="inline"
           className="search-fields"
-          initialValues={{
-            year: String(new Date().getFullYear()),
-            data_scope: '调整前',
-            period_type: '当期',
-            ...def.filters
-              .filter((f) => f.defaultValue !== undefined)
-              .reduce((acc, f) => ({ ...acc, [f.key]: f.defaultValue }), {}),
-          }}
+          initialValues={defaultValues}
         >
           {firstRowFilters.map((filter) => (
             <Form.Item key={filter.key} label={filter.label} name={filter.key} className="search-field-item">

@@ -1,0 +1,180 @@
+/* TargetCompileTable 样式（总部目标编制） */
+
+.target-compile-page {
+  background: white;
+  border-radius: 2px;
+  overflow: auto;
+}
+
+/* 表格容器 */
+.target-compile-page .table-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.target-compile-page .ant-table-wrapper {
+  min-width: 100%;
+}
+
+/* 查询条件区 */
+.target-compile-page .search-form {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fafafa;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.target-compile-page .search-fields {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  flex: 1;
+}
+
+.target-compile-page .search-field-item {
+  width: 190px;
+  margin-right: 12px !important;
+  margin-bottom: 8px !important;
+  margin-left: 0 !important;
+}
+
+.target-compile-page .search-field-item .ant-form-item-label {
+  min-width: 84px;
+  text-align: right;
+  font-size: 13px;
+  color: #333;
+  padding-right: 8px;
+}
+
+.target-compile-page .search-field-item .ant-form-item-label > label::after {
+  content: ':';
+  margin: 0 4px 0 2px;
+}
+
+.target-compile-page .search-field-item .filter-select {
+  width: 100%;
+}
+
+.target-compile-page .search-field-item .ant-select-selector {
+  border-radius: 2px !important;
+  font-size: 13px;
+}
+
+/* 右侧按钮区 */
+.target-compile-page .search-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.target-compile-page .search-buttons .ant-btn {
+  border-radius: 2px;
+  height: 28px;
+  font-size: 13px;
+}
+
+.target-compile-page .search-buttons .ant-btn-primary {
+  background: #1677ff;
+}
+
+/* 指标标题条 */
+.target-compile-page .metric-bar {
+  padding: 6px 16px;
+  background: #1d39c4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.target-compile-page .metric-title {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 表格样式 */
+.target-compile-page .ant-table {
+  border: 1px solid #e8e8e8;
+  border-top: none;
+}
+
+.target-compile-page .ant-table-container {
+  overflow-x: auto;
+}
+
+.target-compile-page .ant-table-body {
+  overflow-x: auto !important;
+}
+
+.target-compile-page .ant-table-thead > tr > th {
+  background: #e6f4ff !important;
+  border-bottom: 1px solid #e8e8e8 !important;
+  border-right: 1px solid #e8e8e8 !important;
+  font-weight: 600;
+  font-size: 12px;
+  color: #333;
+  padding: 4px 8px !important;
+  height: 32px !important;
+  line-height: 24px !important;
+  white-space: nowrap;
+  text-align: center !important;
+}
+
+.target-compile-page .ant-table-tbody > tr > td {
+  padding: 4px 8px !important;
+  font-size: 12px;
+  color: #333;
+  border-bottom: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;
+  height: 32px !important;
+  line-height: 24px !important;
+}
+
+.target-compile-page .ant-table-tbody > tr:hover > td {
+  background: #e6ecfe !important;
+}
+
+/* 灰色只读单元格（上年预计完成数/增减数/增减率/全年合计） */
+.target-compile-page .readonly-cell {
+  background: #fafafa !important;
+}
+
+.target-compile-page .readonly-cell .ant-input-number {
+  display: none;
+}
+
+/* 可编辑单元格（预算数） */
+.target-compile-page .editable-cell {
+  background: #fff;
+}
+
+.target-compile-page .ant-table-tbody td .ant-input-number {
+  border-radius: 2px;
+  font-size: 12px;
+}
+
+.target-compile-page .ant-table-tbody td .ant-input-number-input {
+  font-size: 12px;
+}
+
+/* 分页器 */
+.target-compile-page .ant-pagination {
+  padding: 8px 16px;
+  margin: 0;
+  border-top: 1px solid #e8e8e8;
+  background: #fafafa;
+}
+
+/* 导入提示 */
+.target-compile-page .import-tip {
+  font-size: 13px;
+  color: #555;
+  line-height: 24px;
+}

@@ -121,15 +121,15 @@ function App() {
             
             {/* 预算管理 - 实际数（第二章 2.1-2.5） */}
             {/* 2.1 费用制片区（含片区直营/片区招商/片区城市连锁，片区销售模式下拉切换） */}
-            <Route path="budget/actual-sales-region" element={<ActualDataPage sectionKey="2.1" />} />
+            <Route path="budget/actual-sales-region" element={<ActualDataPage key="2.1" sectionKey="2.1" />} />
             {/* 2.2 总代（业务模式锁定为总代） */}
-            <Route path="budget/actual-sales-general-agent" element={<ActualDataPage sectionKey="2.2" />} />
+            <Route path="budget/actual-sales-general-agent" element={<ActualDataPage key="2.2" sectionKey="2.2" />} />
             {/* 2.3 代理制片区（业务模式锁定为代理制片区） */}
-            <Route path="budget/actual-sales-agent-region" element={<ActualDataPage sectionKey="2.3" />} />
+            <Route path="budget/actual-sales-agent-region" element={<ActualDataPage key="2.3" sectionKey="2.3" />} />
             {/* 2.4 总部直营（业务模式锁定为总部直营） */}
-            <Route path="budget/actual-sales-hq" element={<ActualDataPage sectionKey="2.4" />} />
+            <Route path="budget/actual-sales-hq" element={<ActualDataPage key="2.4" sectionKey="2.4" />} />
             {/* 2.5 数字营销&城市连锁（共用页面，业务模式页内切换） */}
-            <Route path="budget/actual-sales-digital" element={<ActualDataPage sectionKey="2.5" />} />
+            <Route path="budget/actual-sales-digital" element={<ActualDataPage key="2.5" sectionKey="2.5" />} />
             <Route path="budget/actual-sales-summary" element={<SalesActualSummary />} />
             {/* 旧路由重定向（原三个费用制片区页面合并为 2.1，代理制片区&总代拆分为 2.2/2.3） */}
             <Route path="budget/actual-sales-direct" element={<Navigate to="/budget/actual-sales-region" replace />} />
