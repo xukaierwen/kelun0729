@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Form, Select, Button, Space, Table, Modal, InputNumber, Tag, message } from 'antd'
+import { Form, Select, Button, Space, Table, Modal, InputNumber, message } from 'antd'
 import {
   SearchOutlined,
   SaveOutlined,
@@ -378,12 +378,6 @@ export default function TargetCompileTable() {
           <Button size="small" icon={<ExportOutlined />} onClick={handleExport}>导出</Button>
           <Button size="small" icon={<ImportOutlined />} onClick={() => setImportModalOpen(true)}>导入</Button>
         </div>
-      </div>
-
-      {/* 指标标题条 */}
-      <div className="metric-bar">
-        <span className="metric-title">销售量-转换后</span>
-        {locked && <Tag color="orange" style={{ marginLeft: 8 }}>已提交锁定</Tag>}
       </div>
 
       {/* 数据表格 */}
