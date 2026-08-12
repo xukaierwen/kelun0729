@@ -161,7 +161,7 @@ export default function TargetCompileTable() {
   const columns = useMemo(() => {
     const cols = []
 
-    // 维度列（左侧固定）
+    // 维度列（左侧固定，不参与"销售量-转换后"分组）
     DIMENSION_FIELDS.forEach((f) => {
       cols.push({
         title: f.title,
@@ -174,43 +174,73 @@ export default function TargetCompileTable() {
       })
     })
 
-    // 指标分组：预算数 / 上年预计完成数 / 增减数 / 增减率
-    GROUPS.forEach((g) => {
-      const children = []
-      for (let m = 1; m <= 12; m++) {
-        const key = `${g.key}_m${pad2(m)}`
-        const editable = g.editable && !locked
-        children.push({
-          title: `${m}月`,
-          dataIndex: key,
-          key,
-          width: 90,
-          align: 'right',
-          render: (v, record) =>
-            g.isPercent ? formatPercent(getCellValue(g, m, record)) : formatValue(getCellValue(g, m, record)),
-          onCell: g.editable
-            ? (record) => ({
-                editable,
-                record,
-                dataIndex: key,
-                onSave: handleCellSave,
-              })
-            : () => ({ className: 'readonly-cell' }),
-        })
-      }
-      // 全年合计（灰色只读，自动汇总）
-      children.push({
-        title: '全年合计',
-        dataIndex: `${g.key}_annual`,
-        key: `${g.key}_annual`,
-        width: 100,
+    // 预算数 1-12 月 + 全年合计
+    const budgetChildren = []
+    for (let m = 1; m <= 12; m++) {
+      const key = `budget_m${pad2(m)}`
+      budgetChildren.push({
+        title: `${m}月`,
+        dataIndex: key,
+        key,
+        width: 90,
         align: 'right',
-        render: (v, record) =>
-          g.isPercent ? formatPercent(getAnnualValue(g, record)) : formatValue(getAnnualValue(g, record)),
-        onCell: () => ({ className: 'readonly-cell' }),
+        render: (v, record) => formatValue(record[key]),
+        onCell: (record) => ({
+          editable: !locked,
+          record,
+          dataIndex: key,
+          onSave: handleCellSave,
+        }),
       })
-      cols.push({ title: g.title, key: g.key, children })
+    }
+    budgetChildren.push({
+      title: '全年合计',
+      dataIndex: 'budget_annual',
+      key: 'budget_annual',
+      width: 100,
+      align: 'right',
+      render: (v, record) => formatValue(getAnnualValue({ key: 'budget' }, record)),
+      onCell: () => ({ className: 'readonly-cell' }),
     })
+
+    // 销售量-转换后（指标分组，跨预算数/上年预计完成数/增减数/增减率）
+    cols.push({
+      title: '销售量-转换后',
+      children: [
+        {
+          title: '预算数',
+          children: budgetChildren,
+        },
+        {
+          title: '上年预计完成数',
+          dataIndex: 'last_year_annual',
+          key: 'last_year_annual',
+          width: 120,
+          align: 'right',
+          render: (v, record) => formatValue(getAnnualValue({ key: 'last_year' }, record)),
+          onCell: () => ({ className: 'readonly-cell' }),
+        },
+        {
+          title: '增减数',
+          dataIndex: 'diff_annual',
+          key: 'diff_annual',
+          width: 100,
+          align: 'right',
+          render: (v, record) => formatValue(getAnnualValue({ key: 'diff' }, record)),
+          onCell: () => ({ className: 'readonly-cell' }),
+        },
+        {
+          title: '增减率',
+          dataIndex: 'diff_rate_annual',
+          key: 'diff_rate_annual',
+          width: 100,
+          align: 'right',
+          render: (v, record) => formatPercent(getAnnualValue({ key: 'diff_rate' }, record)),
+          onCell: () => ({ className: 'readonly-cell' }),
+        },
+      ],
+    })
+
     return cols
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locked])
@@ -256,21 +286,27 @@ export default function TargetCompileTable() {
       return
     }
     const headers = [...DIMENSION_FIELDS.map((f) => f.title)]
-    GROUPS.forEach((g) => {
-      for (let m = 1; m <= 12; m++) headers.push(`${g.title}-${m}月`)
-      headers.push(`${g.title}-全年合计`)
-    })
+    // 预算数 1-12 月 + 全年合计
+    for (let m = 1; m <= 12; m++) headers.push(`预算数-${m}月`)
+    headers.push('预算数-全年合计')
+    // 上年预计完成数/增减数/增减率 全年合计
+    headers.push('上年预计完成数-全年合计')
+    headers.push('增减数-全年合计')
+    headers.push('增减率-全年合计')
+
     const rows = dataSource.map((record) => {
       const vals = []
       DIMENSION_FIELDS.forEach((f) => vals.push(record[f.key] ?? ''))
-      GROUPS.forEach((g) => {
-        for (let m = 1; m <= 12; m++) {
-          const v = getCellValue(g, m, record)
-          vals.push(g.isPercent && v != null ? `${Number(v).toFixed(2)}%` : v ?? '')
-        }
-        const a = getAnnualValue(g, record)
-        vals.push(g.isPercent && a != null ? `${Number(a).toFixed(2)}%` : a ?? '')
-      })
+      // 预算数 1-12 月 + 全年合计
+      for (let m = 1; m <= 12; m++) {
+        vals.push(record[`budget_m${pad2(m)}`] ?? '')
+      }
+      vals.push(getAnnualValue({ key: 'budget' }, record) ?? '')
+      // 上年预计完成数/增减数/增减率 全年合计
+      vals.push(getAnnualValue({ key: 'last_year' }, record) ?? '')
+      vals.push(getAnnualValue({ key: 'diff' }, record) ?? '')
+      const diffRate = getAnnualValue({ key: 'diff_rate' }, record)
+      vals.push(diffRate != null ? `${Number(diffRate).toFixed(2)}%` : '')
       return vals
     })
     const BOM = '\uFEFF'
