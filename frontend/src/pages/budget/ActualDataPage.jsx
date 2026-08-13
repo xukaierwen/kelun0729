@@ -1,18 +1,16 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Form, Select, Button, Space, Table, Input, Modal, InputNumber, Switch, Tag, message } from 'antd'
+import { Form, Select, Button, Space, Table, Input, Modal, InputNumber, message } from 'antd'
 import {
   SearchOutlined,
   SaveOutlined,
   ImportOutlined,
   ExportOutlined,
-  SettingOutlined,
   LinkOutlined,
   DownOutlined,
   UpOutlined,
 } from '@ant-design/icons'
 import {
   ACTUAL_DATA_SECTIONS,
-  ACTION_BUTTONS,
   IMPORT_TEMPLATE_URL,
   YEAR_OPTIONS,
   MGMT_TYPE_OPTIONS,
@@ -238,8 +236,6 @@ export default function ActualDataPage({ sectionKey }) {
 
   const [loading, setLoading] = useState(false)
   const [dataSource, setDataSource] = useState([])
-  const [periods, setPeriods] = useState({})
-  const [periodModalOpen, setPeriodModalOpen] = useState(false)
   const [searchModal, setSearchModal] = useState(null)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [importModalOpen, setImportModalOpen] = useState(false)
@@ -262,8 +258,6 @@ export default function ActualDataPage({ sectionKey }) {
     form.setFieldsValue(defaultValues)
     setLoading(false)
     setDataSource([])
-    setPeriods({})
-    setPeriodModalOpen(false)
     setSearchModal(null)
     setSearchKeyword('')
     setImportModalOpen(false)
@@ -321,7 +315,8 @@ export default function ActualDataPage({ sectionKey }) {
         const children = []
         for (let m = 1; m <= 12; m++) {
           const key = `${g.key}_m${pad2(m)}`
-          const editable = g.editable && dataScope === '调整' && periodType === '当期' && !!periods[m]
+          // 调整列编辑条件：数据口径=调整 且 当期/累计=当期（期间默认全部打开）
+          const editable = g.editable && dataScope === '调整' && periodType === '当期'
           children.push({
             title: `${m}月`,
             dataIndex: key,
@@ -351,9 +346,9 @@ export default function ActualDataPage({ sectionKey }) {
       })
     return cols
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [def, values, dataScope, periodType, periods])
+  }, [def, values, dataScope, periodType])
 
-  // 单元格编辑（仅「销售量-调整」列，且期间打开）
+  // 单元格编辑（仅「销售量-调整」列）
   const handleCellSave = (record, dataIndex, value) => {
     setDataSource((prev) => prev.map((r) => (r.id === record.id ? { ...r, [dataIndex]: value } : r)))
   }
@@ -368,21 +363,14 @@ export default function ActualDataPage({ sectionKey }) {
     }, 400)
   }
 
-  // ---------- 保存（仅打开期间；调整后=调整前+调整 由展示层实时计算） ----------
+  // ---------- 保存（调整后=调整前+调整 由展示层实时计算） ----------
   const handleSave = () => {
     if (!canSave) return
-    const opened = MONTHS.filter((m) => periods[m])
-    if (opened.length === 0) {
-      message.warning('当前没有打开的期间，请先点击「期间设置」打开月份后再保存')
-      return
-    }
     if (dataSource.length === 0) {
       message.warning('请先点击「查询」加载数据')
       return
     }
-    message.success(
-      `保存成功：共 ${dataSource.length} 条记录 × ${opened.length} 个打开期间（${opened.map((m) => `${m}月`).join('、')}）`
-    )
+    message.success(`保存成功：共 ${dataSource.length} 条记录的调整数据已保存`)
   }
 
   // ---------- 导出（当前查询结果全量 CSV） ----------
@@ -431,9 +419,6 @@ export default function ActualDataPage({ sectionKey }) {
     link.click()
     message.success('导出成功')
   }
-
-  // ---------- 期间设置 ----------
-  const openedCount = MONTHS.filter((m) => periods[m]).length
 
   // ---------- 弹窗查询 ----------
   const openSearchModal = (filter) => {
@@ -526,9 +511,6 @@ export default function ActualDataPage({ sectionKey }) {
               {searchExpanded ? <UpOutlined /> : <DownOutlined />}
             </Button>
           )}
-          <Button size="small" icon={<SettingOutlined />} onClick={() => setPeriodModalOpen(true)}>
-            期间设置{openedCount > 0 && <Tag color="green" style={{ marginLeft: 4 }}>{openedCount}月开</Tag>}
-          </Button>
           <Button size="small" icon={<ExportOutlined />} onClick={handleExport}>导出</Button>
           <Button size="small" icon={<ImportOutlined />} onClick={() => setImportModalOpen(true)}>导入</Button>
           <Button size="small" icon={<SaveOutlined />} disabled={!canSave} onClick={handleSave}>保存</Button>
@@ -556,33 +538,6 @@ export default function ActualDataPage({ sectionKey }) {
           locale={{ emptyText: '暂无数据，请点击「查询」加载' }}
         />
       </div>
-
-      {/* 期间设置弹窗 */}
-      <Modal
-        title="期间设置（维护实际数期间）"
-        open={periodModalOpen}
-        onCancel={() => setPeriodModalOpen(false)}
-        footer={
-          <Button type="primary" size="small" onClick={() => setPeriodModalOpen(false)}>确定</Button>
-        }
-        width={560}
-      >
-        <p className="period-tip">
-          维护实际数期间默认<b>关闭</b>；打开某月后，对应月份的「销售量-调整」列才允许编辑（需配合 数据口径=调整、当期/累计=当期）。
-        </p>
-        <div className="period-grid">
-          {MONTHS.map((m) => (
-            <div key={m} className={`period-item ${periods[m] ? 'opened' : ''}`}>
-              <span className="period-month">{m}月</span>
-              <Switch
-                size="small"
-                checked={!!periods[m]}
-                onChange={(v) => setPeriods((p) => ({ ...p, [m]: v }))}
-              />
-            </div>
-          ))}
-        </div>
-      </Modal>
 
       {/* 弹窗查询（一级业务员 / 一级客商） */}
       <Modal
@@ -641,7 +596,7 @@ export default function ActualDataPage({ sectionKey }) {
       >
         <p className="import-tip">
           1. 请前往共享飞书表格「导入/导出模板」下载对应章节模板；<br />
-          2. 按模板填写数据后上传 Excel；系统将校验并<b>仅更新打开期间的数据</b>；<br />
+          2. 按模板填写数据后上传 Excel；系统将校验并<b>仅更新调整列数据</b>；<br />
           3. demo 阶段暂未开放上传，模板下载请点击右下角按钮。
         </p>
       </Modal>

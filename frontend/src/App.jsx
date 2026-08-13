@@ -177,13 +177,18 @@ function App() {
             <Route path="budget/annual/cost-budget" element={<PlaceholderPage title="成本预算" />} />
             <Route path="budget/annual/profit-table" element={<PlaceholderPage title="毛利表" />} />
             <Route path="budget/annual/annual-review" element={<PlaceholderPage title="年度预算审核" />} />
-            <Route path="budget/planned-complete-digital" element={<PlannedCompleteTable pageTitle="数字营销&城市连锁" />} />
-            <Route path="budget/planned-complete-direct" element={<PlannedCompleteTable pageTitle="费用制片区-片区直营" />} />
-            <Route path="budget/planned-complete-investment" element={<PlannedCompleteTable pageTitle="费用制片区-片区招商" />} />
-            <Route path="budget/planned-complete-chain" element={<PlannedCompleteTable pageTitle="费用制片区-片区城市连锁" />} />
-            <Route path="budget/planned-complete-agent" element={<PlannedCompleteTable pageTitle="代理制片区&总代" />} />
-            <Route path="budget/planned-complete-hq" element={<PlannedCompleteTable pageTitle="总部直营" />} />
+            {/* 预计完成数（5 个模式 Tab：费用制片区/总代/代理制片区/总部直营/数字营销&城市连锁） */}
+            <Route path="budget/planned-complete-region" element={<PlannedCompleteTable key="region" sectionKey="region" />} />
+            <Route path="budget/planned-complete-general-agent" element={<PlannedCompleteTable key="general_agent" sectionKey="general_agent" />} />
+            <Route path="budget/planned-complete-agent-region" element={<PlannedCompleteTable key="agent_region" sectionKey="agent_region" />} />
+            <Route path="budget/planned-complete-hq" element={<PlannedCompleteTable key="hq" sectionKey="hq" />} />
+            <Route path="budget/planned-complete-digital" element={<PlannedCompleteTable key="digital" sectionKey="digital" />} />
             <Route path="budget/planned-complete-review" element={<PlannedCompleteReview />} />
+            {/* 旧路由重定向（原 7 个菜单合并为 5 个模式） */}
+            <Route path="budget/planned-complete-direct" element={<Navigate to="/budget/planned-complete-region" replace />} />
+            <Route path="budget/planned-complete-investment" element={<Navigate to="/budget/planned-complete-region" replace />} />
+            <Route path="budget/planned-complete-chain" element={<Navigate to="/budget/planned-complete-region" replace />} />
+            <Route path="budget/planned-complete-agent" element={<Navigate to="/budget/planned-complete-general-agent" replace />} />
             <Route path="budget/adjust-plan" element={<PlaceholderPage title="预算调整6+6" />} />
             <Route path="budget/rolling-forecast" element={<PlaceholderPage title="滚动预测" />} />
             <Route path="budget/analysis" element={<AnalysisReport />} />
