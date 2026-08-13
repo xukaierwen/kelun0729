@@ -1,0 +1,123 @@
+/* TargetReviewTable 样式（4.2 预算数-总部目标审核） */
+
+.target-review-page {
+  padding: 12px;
+  background: #fff;
+  min-height: 100%;
+}
+
+/* 查询条件区 */
+.target-review-page .search-form {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.target-review-page .search-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  flex: 1;
+}
+
+.target-review-page .search-field-item {
+  width: 220px;
+  margin-right: 16px !important;
+  margin-bottom: 8px !important;
+  margin-left: 0 !important;
+}
+
+.target-review-page .search-field-item .ant-form-item-row {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.target-review-page .search-field-item .ant-form-item-label {
+  min-width: 84px;
+  text-align: right;
+  font-size: 13px;
+  color: #333;
+}
+
+.target-review-page .search-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* 表头：指标组深蓝底白字加粗 */
+.target-review-page .ant-table-thead > tr > th {
+  background: #4472c4 !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-color: #3b62ad !important;
+}
+
+/* 固定维度列表头浅蓝底深色字（参照表模型图） */
+.target-review-page .ant-table-thead > tr > th.tr-dim-col {
+  background: #b8cce4 !important;
+  color: #262626 !important;
+  font-weight: 600;
+}
+
+/* 行斑马纹 */
+.target-review-page .ant-table-tbody > tr.tr-zebra > td {
+  background: #f2f2f2;
+}
+
+.target-review-page .ant-table-tbody > tr:hover > td {
+  background: #e6f0fb;
+}
+
+/* 审核详情区（行展开） */
+.target-review-page .review-detail {
+  padding: 8px 12px;
+  background: #fafcff;
+}
+
+.target-review-page .review-detail h4 {
+  margin: 4px 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.target-review-page .review-detail-grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.target-review-page .review-detail-main {
+  flex: 1 1 480px;
+  min-width: 0;
+}
+
+.target-review-page .review-detail-side {
+  flex: 0 0 320px;
+}
+
+.target-review-page .review-actions {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.target-review-page .review-trace {
+  margin-top: 4px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+/* 预算数明细只读表 */
+.target-review-page .review-detail .ant-table-thead > tr > th {
+  background: #dce6f5 !important;
+  color: #262626 !important;
+  font-weight: 600;
+  border-color: #c5d4ee !important;
+}
