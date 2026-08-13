@@ -43,8 +43,8 @@
 }
 
 .actual-data-page .search-field-item {
-  width: 190px;
-  margin-right: 12px !important;
+  width: 240px;
+  margin-right: 16px !important;
   margin-bottom: 8px !important;
   margin-left: 0 !important;
 }
@@ -182,6 +182,6 @@
 /* 响应式 */
 @media (max-width: 1200px) {
   .actual-data-page .search-field-item {
-    width: 170px;
+    width: 210px;
   }
 }

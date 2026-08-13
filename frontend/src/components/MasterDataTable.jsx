@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  Table, Button, Space, Modal, Form, Input, Select, Popconfirm,
+  Table, Button, Space, Modal, Form, Input, InputNumber, Select, Popconfirm,
   message, Tag, DatePicker, Switch,
 } from 'antd'
 import {
@@ -428,6 +428,9 @@ export default function MasterDataTable({
                   />
                 ) : col.inputType === 'textarea' ? (
                   <Input.TextArea rows={3} disabled={isReadonly} />
+                ) : col.inputType === 'number' ? (
+                  // 数值字段：输入框（非下拉）
+                  <InputNumber style={{ width: '100%' }} placeholder={`请输入${col.title}`} disabled={isReadonly} />
                 ) : isParentNameField ? (
                   <Input
                     placeholder={`请输入${col.title}`}

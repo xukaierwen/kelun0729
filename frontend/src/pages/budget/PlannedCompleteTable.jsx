@@ -28,8 +28,9 @@ const resolveVisible = (cond, values) => {
   if (!cond) return true
   if (cond.field && Array.isArray(cond.includesAny)) {
     const v = values[cond.field]
-    if (!v || v.length === 0) return true
-    return v.some((x) => cond.includesAny.includes(x))
+    const arr = Array.isArray(v) ? v : (v == null || v === '' ? [] : [v])
+    if (arr.length === 0) return true
+    return arr.some((x) => cond.includesAny.includes(x))
   }
   return true
 }
@@ -122,6 +123,10 @@ const generateMockRows = (def) => {
       row[`sales_volume_budget_pre_m${pad2(m)}`] = round2(rand(100, 300))
       row[`sales_volume_budget_post_m${pad2(m)}`] = round2(rand(100, 300))
     }
+    // 预算调整 6+6 数（费用制片区紧凑结构）：10-12 月
+    for (let m = 10; m <= 12; m++) {
+      row[`sales_volume_budget_m${pad2(m)}`] = round2(rand(100, 300))
+    }
 
     // 预计调整数（变化值）：1-12 月 + 全年合计
     const plan = []
@@ -136,8 +141,8 @@ const generateMockRows = (def) => {
     // 第二轮：按指标组生成其余指标
     def.metricGroups.forEach((g) => {
       if (g.structure === 'salesVolume' || g.structure === 'auto') return
-      const isChange = g.structure === 'change' || g.structure === 'changeOnly'
-      const hasTotal = g.structure === 'change' || g.structure === 'total'
+      const isChange = g.structure === 'change' || g.structure === 'changeOnly' || g.structure === 'sv14' || g.structure === 'sv13nt'
+      const hasTotal = g.structure === 'change' || g.structure === 'total' || g.structure === 'sv14' || g.structure === 'sv13' || g.structure === 'mg12t'
       for (let m = 1; m <= 12; m++) {
         let v = null
         switch (g.key) {
@@ -358,6 +363,13 @@ export default function PlannedCompleteTable({ sectionKey }) {
   // ---------- 动态列构建 ----------
   const columns = useMemo(() => {
     const cols = []
+    // 销售模式判定（片区直营/招商相关列的灰底显示）
+    const salesMode = Array.isArray(values.sales_mode) ? values.sales_mode : []
+    const hasDirect = salesMode.length === 0 || salesMode.includes('片区直营')
+    const hasAgent = salesMode.length === 0 || salesMode.includes('片区招商') || salesMode.includes('片区城市连锁')
+    const isGray = (grp) => (grp.grayWhenNotDirect && !hasDirect) || (grp.grayWhenNotAgent && !hasAgent)
+    const GRAY_BG = { background: '#d9d9d9' }
+    const grayProps = (grp) => (isGray(grp) ? { onCell: () => ({ style: GRAY_BG }), onHeaderCell: () => ({ style: GRAY_BG }) } : {})
     // 固定列（单列展示，含条件显隐）
     def.fixedColumns
       .filter((c) => resolveVisible(c.showWhen, values))
@@ -368,8 +380,66 @@ export default function PlannedCompleteTable({ sectionKey }) {
     def.metricGroups
       .filter((g) => resolveVisible(g.showWhen, values))
       .forEach((g) => {
-        // 销售量特殊结构（4 大分组）
+        // 销售量特殊结构
         if (g.structure === 'salesVolume') {
+          // 费用制片区/总代/代理制片区：紧凑结构（实际数调整后1-9月 / 预算调整6+6数10-12月 / 预计调整数（变化值）12月 / 全年合计合并上下）
+          if (def.key === 'region' || def.key === 'general_agent' || def.key === 'agent_region' || def.key === 'hq' || def.key === 'digital') {
+            cols.push({
+              title: g.title,
+              key: g.key,
+              children: [
+                {
+                  title: '实际数调整后',
+                  key: 'actual',
+                  children: Array.from({ length: 9 }, (_, i) => ({
+                    title: `${i + 1}月`,
+                    dataIndex: `sales_volume_actual_m${pad2(i + 1)}`,
+                    key: `sales_volume_actual_m${pad2(i + 1)}`,
+                    width: 76,
+                    align: 'right',
+                    render: formatValue,
+                  })),
+                },
+                {
+                  title: '预算调整6+6数',
+                  key: 'budget',
+                  children: Array.from({ length: 3 }, (_, i) => ({
+                    title: `${i + 10}月`,
+                    dataIndex: `sales_volume_budget_m${pad2(i + 10)}`,
+                    key: `sales_volume_budget_m${pad2(i + 10)}`,
+                    width: 76,
+                    align: 'right',
+                    render: formatValue,
+                  })),
+                },
+                {
+                  title: '预计调整数（变化值）',
+                  key: 'plan',
+                  children: [
+                    {
+                      title: '12月',
+                      dataIndex: 'sales_volume_plan_m12',
+                      key: 'sales_volume_plan_m12',
+                      width: 76,
+                      align: 'right',
+                      render: formatValue,
+                      onCell: (record) => ({ editable: true, record, dataIndex: 'sales_volume_plan_m12', onSave: handleCellSave }),
+                    },
+                  ],
+                },
+                {
+                  title: '全年合计',
+                  dataIndex: 'sales_volume_total',
+                  key: 'sales_volume_total',
+                  width: 90,
+                  align: 'right',
+                  render: formatValue,
+                },
+              ],
+            })
+            return
+          }
+          // 其他 Tab：原有 4 大分组结构
           cols.push({
             title: g.title,
             key: g.key,
@@ -453,7 +523,133 @@ export default function PlannedCompleteTable({ sectionKey }) {
             width: g.width || 110,
             align: 'right',
             render: (v) => v ?? '-',
+            ...grayProps(g),
           })
+          return
+        }
+
+        // 12月拆两组：实际数调整后（1-9月）/ 预算调整6+6数（10-12月）
+        if (g.structure === 'mg12') {
+          cols.push({
+            title: g.title,
+            key: g.key,
+            children: [
+              {
+                title: '实际数调整后',
+                key: `${g.key}_actual`,
+                children: Array.from({ length: 9 }, (_, i) => ({
+                  title: `${i + 1}月`,
+                  dataIndex: `${g.key}_m${pad2(i + 1)}`,
+                  key: `${g.key}_m${pad2(i + 1)}`,
+                  width: 76,
+                  align: 'right',
+                  render: formatValue,
+                })),
+              },
+              {
+                title: '预算调整6+6数',
+                key: `${g.key}_budget`,
+                children: Array.from({ length: 3 }, (_, i) => ({
+                  title: `${i + 10}月`,
+                  dataIndex: `${g.key}_m${pad2(i + 10)}`,
+                  key: `${g.key}_m${pad2(i + 10)}`,
+                  width: 76,
+                  align: 'right',
+                  render: formatValue,
+                })),
+              },
+            ],
+          })
+          return
+        }
+
+        // 12月拆两组 + 全年合计（合并上下）
+        if (g.structure === 'mg12t') {
+          cols.push({
+            title: g.title,
+            key: g.key,
+            children: [
+              {
+                title: '实际数调整后',
+                key: `${g.key}_actual`,
+                children: Array.from({ length: 9 }, (_, i) => ({
+                  title: `${i + 1}月`,
+                  dataIndex: `${g.key}_m${pad2(i + 1)}`,
+                  key: `${g.key}_m${pad2(i + 1)}`,
+                  width: 76,
+                  align: 'right',
+                  render: formatValue,
+                })),
+              },
+              {
+                title: '预算调整6+6数',
+                key: `${g.key}_budget`,
+                children: Array.from({ length: 3 }, (_, i) => ({
+                  title: `${i + 10}月`,
+                  dataIndex: `${g.key}_m${pad2(i + 10)}`,
+                  key: `${g.key}_m${pad2(i + 10)}`,
+                  width: 76,
+                  align: 'right',
+                  render: formatValue,
+                })),
+              },
+              {
+                title: '全年合计',
+                dataIndex: `${g.key}_total`,
+                key: `${g.key}_total`,
+                width: 90,
+                align: 'right',
+                render: formatValue,
+              },
+            ],
+          })
+          return
+        }
+
+        // 通用销售量式拆分：14列（含预计调整数+全年合计）/13列（不含预计调整数）/13列无全年合计
+        if (g.structure === 'sv14' || g.structure === 'sv13' || g.structure === 'sv13nt') {
+          const withPlan = g.structure === 'sv14' || g.structure === 'sv13nt'
+          const withTotal = g.structure !== 'sv13nt'
+          const mCol = (m, key) => ({
+            title: `${m}月`,
+            dataIndex: key,
+            key,
+            width: 76,
+            align: 'right',
+            render: formatValue,
+            ...grayProps(g),
+          })
+          const children = [
+            {
+              title: '实际数调整后',
+              key: `${g.key}_actual`,
+              children: Array.from({ length: 9 }, (_, i) => mCol(i + 1, `${g.key}_m${pad2(i + 1)}`)),
+            },
+            {
+              title: '预算调整6+6数',
+              key: `${g.key}_budget`,
+              children: Array.from({ length: 3 }, (_, i) => mCol(i + 10, `${g.key}_m${pad2(i + 10)}`)),
+            },
+          ]
+          if (withPlan) {
+            children.push({
+              title: '预计调整数（变化值）',
+              key: `${g.key}_plan`,
+              children: [{ ...mCol(12, `${g.key}_change`), title: '12月' }],
+            })
+          }
+          if (withTotal) {
+            children.push({
+              title: '全年合计',
+              dataIndex: `${g.key}_total`,
+              key: `${g.key}_total`,
+              width: 90,
+              align: 'right',
+              render: formatValue,
+              ...grayProps(g),
+            })
+          }
+          cols.push({ title: g.title, key: g.key, children, ...grayProps(g) })
           return
         }
 
@@ -467,6 +663,7 @@ export default function PlannedCompleteTable({ sectionKey }) {
           width: 76,
           align: 'right',
           render: formatValue,
+          ...grayProps(g),
         }))
         if (isChange) {
           children.push({
@@ -488,7 +685,7 @@ export default function PlannedCompleteTable({ sectionKey }) {
             render: formatValue,
           })
         }
-        cols.push({ title: g.title, key: g.key, children })
+        cols.push({ title: g.title, key: g.key, children, ...grayProps(g) })
       })
     return cols
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -537,10 +734,30 @@ export default function PlannedCompleteTable({ sectionKey }) {
         return
       }
       if (g.structure === 'salesVolume') {
-        headers.push('销售量-实际数-调整后-1月', ...Array.from({ length: 8 }, (_, i) => `销售量-实际数-调整后-${i + 2}月`), '销售量-实际数-调整后-全年合计')
-        headers.push(...Array.from({ length: 6 }, (_, i) => `销售量-预算调整-${i + 1}月-调整前`), ...Array.from({ length: 6 }, (_, i) => `销售量-预算调整-${i + 1}月-调整后`))
-        headers.push(...Array.from({ length: 12 }, (_, i) => `销售量-预计调整数-${i + 1}月`), '销售量-预计调整数-全年合计')
-        headers.push('销售量-全年合计')
+        if (def.key === 'region' || def.key === 'general_agent' || def.key === 'agent_region' || def.key === 'hq' || def.key === 'digital') {
+          headers.push(...Array.from({ length: 9 }, (_, i) => `销售量-实际数调整后-${i + 1}月`))
+          headers.push(...Array.from({ length: 3 }, (_, i) => `销售量-预算调整6+6数-${i + 10}月`))
+          headers.push('销售量-预计调整数（变化值）-12月')
+          headers.push('销售量-全年合计')
+        } else {
+          headers.push('销售量-实际数-调整后-1月', ...Array.from({ length: 8 }, (_, i) => `销售量-实际数-调整后-${i + 2}月`), '销售量-实际数-调整后-全年合计')
+          headers.push(...Array.from({ length: 6 }, (_, i) => `销售量-预算调整-${i + 1}月-调整前`), ...Array.from({ length: 6 }, (_, i) => `销售量-预算调整-${i + 1}月-调整后`))
+          headers.push(...Array.from({ length: 12 }, (_, i) => `销售量-预计调整数-${i + 1}月`), '销售量-预计调整数-全年合计')
+          headers.push('销售量-全年合计')
+        }
+        return
+      }
+      if (g.structure === 'sv14' || g.structure === 'sv13' || g.structure === 'sv13nt') {
+        headers.push(...Array.from({ length: 9 }, (_, i) => `${g.title}-实际数调整后-${i + 1}月`))
+        headers.push(...Array.from({ length: 3 }, (_, i) => `${g.title}-预算调整6+6数-${i + 10}月`))
+        if (g.structure === 'sv14' || g.structure === 'sv13nt') headers.push(`${g.title}-预计调整数（变化值）-12月`)
+        if (g.structure !== 'sv13nt') headers.push(`${g.title}-全年合计`)
+        return
+      }
+      if (g.structure === 'mg12t') {
+        headers.push(...Array.from({ length: 9 }, (_, i) => `${g.title}-实际数调整后-${i + 1}月`))
+        headers.push(...Array.from({ length: 3 }, (_, i) => `${g.title}-预算调整6+6数-${i + 10}月`))
+        headers.push(`${g.title}-全年合计`)
         return
       }
       for (let m = 1; m <= 12; m++) headers.push(`${g.title}-${m}月`)
@@ -557,13 +774,33 @@ export default function PlannedCompleteTable({ sectionKey }) {
           return
         }
         if (g.structure === 'salesVolume') {
-          for (let m = 1; m <= 9; m++) vals.push(record[`sales_volume_actual_m${pad2(m)}`] ?? '')
-          vals.push(record.sales_volume_actual_total ?? '')
-          for (let m = 1; m <= 6; m++) vals.push(record[`sales_volume_budget_pre_m${pad2(m)}`] ?? '')
-          for (let m = 1; m <= 6; m++) vals.push(record[`sales_volume_budget_post_m${pad2(m)}`] ?? '')
-          for (let m = 1; m <= 12; m++) vals.push(record[`sales_volume_plan_m${pad2(m)}`] ?? '')
-          vals.push(record.sales_volume_plan_total ?? '')
-          vals.push(record.sales_volume_total ?? '')
+          if (def.key === 'region' || def.key === 'general_agent' || def.key === 'agent_region' || def.key === 'hq' || def.key === 'digital') {
+            for (let m = 1; m <= 9; m++) vals.push(record[`sales_volume_actual_m${pad2(m)}`] ?? '')
+            for (let m = 10; m <= 12; m++) vals.push(record[`sales_volume_budget_m${pad2(m)}`] ?? '')
+            vals.push(record.sales_volume_plan_m12 ?? '')
+            vals.push(record.sales_volume_total ?? '')
+          } else {
+            for (let m = 1; m <= 9; m++) vals.push(record[`sales_volume_actual_m${pad2(m)}`] ?? '')
+            vals.push(record.sales_volume_actual_total ?? '')
+            for (let m = 1; m <= 6; m++) vals.push(record[`sales_volume_budget_pre_m${pad2(m)}`] ?? '')
+            for (let m = 1; m <= 6; m++) vals.push(record[`sales_volume_budget_post_m${pad2(m)}`] ?? '')
+            for (let m = 1; m <= 12; m++) vals.push(record[`sales_volume_plan_m${pad2(m)}`] ?? '')
+            vals.push(record.sales_volume_plan_total ?? '')
+            vals.push(record.sales_volume_total ?? '')
+          }
+          return
+        }
+        if (g.structure === 'sv14' || g.structure === 'sv13' || g.structure === 'sv13nt') {
+          for (let m = 1; m <= 9; m++) vals.push(record[`${g.key}_m${pad2(m)}`] ?? '')
+          for (let m = 10; m <= 12; m++) vals.push(record[`${g.key}_m${pad2(m)}`] ?? '')
+          if (g.structure === 'sv14' || g.structure === 'sv13nt') vals.push(record[`${g.key}_change`] ?? '')
+          if (g.structure !== 'sv13nt') vals.push(record[`${g.key}_total`] ?? '')
+          return
+        }
+        if (g.structure === 'mg12t') {
+          for (let m = 1; m <= 9; m++) vals.push(record[`${g.key}_m${pad2(m)}`] ?? '')
+          for (let m = 10; m <= 12; m++) vals.push(record[`${g.key}_m${pad2(m)}`] ?? '')
+          vals.push(record[`${g.key}_total`] ?? '')
           return
         }
         for (let m = 1; m <= 12; m++) vals.push(record[`${g.key}_m${pad2(m)}`] ?? '')
@@ -613,7 +850,7 @@ export default function PlannedCompleteTable({ sectionKey }) {
           return <Select size="small" value={filter.defaultValue} disabled className="filter-select" />
         }
         const mode = filter.multiple ? 'multiple' : undefined
-        const props = filter.multiple ? { maxTagCount: 2, allowClear: true } : { allowClear: true }
+        const props = filter.multiple ? { maxTagCount: 2, allowClear: !filter.required } : { allowClear: !filter.required }
         return (
           <Select size="small" placeholder={filter.multiple ? '可多选' : '请选择'} mode={mode} {...props} className="filter-select">
             {(filter.options || []).map((o) => (
@@ -632,13 +869,12 @@ export default function PlannedCompleteTable({ sectionKey }) {
             treeDefaultExpandAll
             treeData={filter.options}
             className="filter-select"
-            style={{ minWidth: 160 }}
           />
         )
       case 'modalSearch':
         return (
           <Space.Compact style={{ width: '100%' }}>
-            <Input size="small" readOnly value={((values[filter.key] || [])).join('、')} placeholder={`请选择${filter.label}`} style={{ minWidth: 120 }} />
+            <Input size="small" readOnly value={((values[filter.key] || [])).join('、')} placeholder={`请选择${filter.label}`} />
             <Button size="small" icon={<SearchOutlined />} onClick={() => openSearchModal(filter)} />
           </Space.Compact>
         )
