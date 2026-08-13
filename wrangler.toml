@@ -1,3 +1,6 @@
+# Cloudflare Pages 项目名：决定访问域名 https://kelun072902.pages.dev
+name = "kelun072902"
+
 [build]
   command = "npm run build"
   publish = "frontend/dist"

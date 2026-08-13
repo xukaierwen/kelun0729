@@ -13,7 +13,6 @@ import {
   PLANNED_COMPLETE_SECTIONS,
   YEAR_OPTIONS,
   MGMT_TEAM_MAP,
-  DATA_SCOPE_OPTIONS,
   PERIOD_TYPE_OPTIONS,
   IMPORT_TEMPLATE_URL,
 } from './plannedCompleteDefs'
@@ -321,7 +320,6 @@ export default function PlannedCompleteTable({ sectionKey }) {
   // 默认筛选值（挂载 / Tab 切换时应用）
   const defaultValues = {
     year: String(new Date().getFullYear()),
-    data_scope: '调整后',
     period_type: '当期',
     sales_mode: [],
     ...def.filters

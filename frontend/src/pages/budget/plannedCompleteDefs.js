@@ -17,11 +17,10 @@ import {
   MGMT_TYPE_OPTIONS,
   MGMT_TEAM_MAP,
   SALESMAN_OPTIONS,
-  DATA_SCOPE_OPTIONS,
   PERIOD_TYPE_OPTIONS,
 } from './actualDataDefs'
 
-export { YEAR_OPTIONS, MGMT_TYPE_OPTIONS, MGMT_TEAM_MAP, SALESMAN_OPTIONS, DATA_SCOPE_OPTIONS, PERIOD_TYPE_OPTIONS }
+export { YEAR_OPTIONS, MGMT_TYPE_OPTIONS, MGMT_TEAM_MAP, SALESMAN_OPTIONS, PERIOD_TYPE_OPTIONS }
 
 // ---------- 业务模式值集 ----------
 export const BUSINESS_MODEL_OPTIONS = ['费用制片区', '总代', '代理制片区', '总部直营', '数字营销', '城市连锁']
@@ -95,7 +94,6 @@ export const PLANNED_COMPLETE_SECTIONS = {
       { key: 'salesman_lv1', label: '一级业务员', type: 'modalSearch', options: SALESMAN_OPTIONS },
       { key: 'analysis_arch', label: '产品分析架构', type: 'treeSelect', options: ANALYSIS_ARCH_TREE },
       { key: 'period_type', label: '当期/累计', type: 'select', options: PERIOD_TYPE_OPTIONS, defaultValue: '当期' },
-      { key: 'data_scope', label: '数据口径', type: 'select', options: DATA_SCOPE_OPTIONS, defaultValue: '调整后' },
     ],
     fixedColumns: [
       { key: 'sales_mode', title: '片区销售模式', width: 110 },
@@ -184,7 +182,6 @@ export const PLANNED_COMPLETE_SECTIONS = {
       { key: 'mgmt_team', label: '总部管理团队', type: 'select', multiple: true, dependsOn: 'mgmt_type' },
       { key: 'business_model', label: '业务模式', type: 'select', options: ['总代'], locked: true, defaultValue: '总代' },
       { key: 'salesman_lv1', label: '一级业务员', type: 'modalSearch', options: SALESMAN_OPTIONS },
-      { key: 'data_scope', label: '数据口径', type: 'select', options: DATA_SCOPE_OPTIONS, defaultValue: '调整后' },
       { key: 'period_type', label: '当期/累计', type: 'select', options: PERIOD_TYPE_OPTIONS, defaultValue: '当期' },
     ],
     fixedColumns: [...AGENT_BASE_FIXED, { key: 'service_fee_coef', title: '服务费系数', width: 100 }],
@@ -221,7 +218,6 @@ export const PLANNED_COMPLETE_SECTIONS = {
       { key: 'mgmt_team', label: '总部管理团队', type: 'select', multiple: true, dependsOn: 'mgmt_type' },
       { key: 'business_model', label: '业务模式', type: 'select', options: ['代理制片区'], locked: true, defaultValue: '代理制片区' },
       { key: 'salesman_lv1', label: '一级业务员', type: 'modalSearch', options: SALESMAN_OPTIONS },
-      { key: 'data_scope', label: '数据口径', type: 'select', options: DATA_SCOPE_OPTIONS, defaultValue: '调整前' },
       { key: 'period_type', label: '当期/累计', type: 'select', options: PERIOD_TYPE_OPTIONS, defaultValue: '当期' },
     ],
     fixedColumns: [...AGENT_BASE_FIXED, { key: 'service_fee_coef', title: '服务费系数', width: 100 }],
@@ -258,7 +254,6 @@ export const PLANNED_COMPLETE_SECTIONS = {
       { key: 'mgmt_team', label: '总部管理团队', type: 'select', multiple: true, dependsOn: 'mgmt_type' },
       { key: 'business_model', label: '业务模式', type: 'select', options: ['总部直营'], locked: true, defaultValue: '总部直营' },
       { key: 'salesman_lv1', label: '一级业务员', type: 'modalSearch', options: SALESMAN_OPTIONS },
-      { key: 'data_scope', label: '数据口径', type: 'select', options: DATA_SCOPE_OPTIONS, defaultValue: '调整前' },
       { key: 'period_type', label: '当期/累计', type: 'select', options: PERIOD_TYPE_OPTIONS, defaultValue: '当期' },
     ],
     fixedColumns: AGENT_BASE_FIXED,
@@ -293,7 +288,6 @@ export const PLANNED_COMPLETE_SECTIONS = {
       { key: 'mgmt_team', label: '总部管理团队', type: 'select', multiple: true, dependsOn: 'mgmt_type' },
       { key: 'business_model', label: '业务模式', type: 'select', options: ['数字营销', '城市连锁'] },
       { key: 'salesman_lv1', label: '一级业务员', type: 'modalSearch', options: SALESMAN_OPTIONS },
-      { key: 'data_scope', label: '数据口径', type: 'select', options: DATA_SCOPE_OPTIONS, defaultValue: '调整前' },
       { key: 'period_type', label: '当期/累计', type: 'select', options: PERIOD_TYPE_OPTIONS, defaultValue: '当期' },
     ],
     fixedColumns: [
