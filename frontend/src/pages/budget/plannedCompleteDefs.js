@@ -243,8 +243,8 @@ export const PLANNED_COMPLETE_SECTIONS = {
       { key: 'service_fee_amount', title: '服务费金额', structure: 'sv14', precision: 2 },
       { key: 'purchase_price_incl', title: '采购单价-含税', structure: 'sv14' },
       { key: 'purchase_amount_incl', title: '采购金额-含税', structure: 'sv13', precision: 2 },
-      { key: 'avg_assess_price_1', title: '平均考核价1', structure: 'monthly' },
-      { key: 'latest_assess_price_1', title: '最新考核价1', structure: 'monthly' },
+      { key: 'avg_assess_price_1', title: '平均考核价1', structure: 'mg12' },
+      { key: 'latest_assess_price_1', title: '最新考核价1', structure: 'mg12' },
     ],
   },
 
