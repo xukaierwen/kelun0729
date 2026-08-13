@@ -334,14 +334,17 @@ export default function ActualDataPage({ sectionKey }) {
               : undefined,
           })
         }
-        children.push({
-          title: g.suffix === 'avg' ? '全年平均' : '全年合计',
-          dataIndex: `${g.key}_annual`,
-          key: `${g.key}_annual`,
-          width: 96,
-          align: 'right',
-          render: (v, record) => formatValue(getAnnualValue(g, record, dataScope, periodType), g),
-        })
+        // monthly 仅拆月展示，不追加全年合计/平均列
+        if (g.suffix !== 'monthly') {
+          children.push({
+            title: g.suffix === 'avg' ? '全年平均' : '全年合计',
+            dataIndex: `${g.key}_annual`,
+            key: `${g.key}_annual`,
+            width: 96,
+            align: 'right',
+            render: (v, record) => formatValue(getAnnualValue(g, record, dataScope, periodType), g),
+          })
+        }
         cols.push({ title: g.title, key: g.key, children })
       })
     return cols
@@ -390,7 +393,7 @@ export default function ActualDataPage({ sectionKey }) {
         return
       }
       for (let m = 1; m <= 12; m++) headers.push(`${g.title}-${m}月`)
-      headers.push(`${g.title}-${g.suffix === 'avg' ? '全年平均' : '全年合计'}`)
+      if (g.suffix !== 'monthly') headers.push(`${g.title}-${g.suffix === 'avg' ? '全年平均' : '全年合计'}`)
     })
 
     const rows = dataSource.map((record) => {
@@ -404,7 +407,7 @@ export default function ActualDataPage({ sectionKey }) {
         for (let m = 1; m <= 12; m++) {
           vals.push(formatValue(getCellValue(g, m, record, dataScope, periodType), g))
         }
-        vals.push(formatValue(getAnnualValue(g, record, dataScope, periodType), g))
+        if (g.suffix !== 'monthly') vals.push(formatValue(getAnnualValue(g, record, dataScope, periodType), g))
       })
       return vals
     })
